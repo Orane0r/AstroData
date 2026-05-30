@@ -1,0 +1,21 @@
+CREATE TABLE `celestial_bodies` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`parentId` integer,
+	`name` text NOT NULL,
+	`type` text NOT NULL,
+	`meanRadius` integer NOT NULL,
+	`massValue` real,
+	`massExponent` integer,
+	`volumeValue` real,
+	`volumeExponent` integer,
+	`density` real NOT NULL,
+	`gravity` real NOT NULL,
+	`averageTemperature` integer NOT NULL,
+	`sideralOrbit` real NOT NULL,
+	`sideralRotation` real NOT NULL,
+	`semimajorAxis` real DEFAULT 0 NOT NULL,
+	`alternativeName` text,
+	`discoveryYear` integer,
+	`imageUrl` text,
+	FOREIGN KEY (`parentId`) REFERENCES `celestial_bodies`(`id`) ON UPDATE no action ON DELETE no action
+);

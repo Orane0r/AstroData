@@ -1,6 +1,6 @@
 /**
  * Generate migrations : npx nuxt db generate
- * Apply migrations : nuxt db migrate
+ * Apply migrations : npx nuxt db migrate
  */
 
 import { int, real, sqliteTable, text } from 'drizzle-orm/sqlite-core'
@@ -8,10 +8,10 @@ import { int, real, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 import type { AnySQLiteColumn } from 'drizzle-orm/sqlite-core'
 import { relations } from 'drizzle-orm'
 
-export const bodies = sqliteTable('bodies', {
+export const celestialBodies = sqliteTable('celestial_bodies', {
   id: int().primaryKey({ autoIncrement: true }),
   parentId: int().references(
-    (): AnySQLiteColumn => bodies.id
+    (): AnySQLiteColumn => celestialBodies.id
   ),
   name: text().notNull(),
   type: text({
@@ -41,14 +41,14 @@ export const bodies = sqliteTable('bodies', {
   imageUrl: text()
 })
 
-export const celestialBodiesRelations = relations(bodies, ({ one, many }) => ({
-  parent: one(bodies, {
-    fields: [bodies.parentId],
-    references: [bodies.id],
+export const celestialBodiesRelations = relations(celestialBodies, ({ one, many }) => ({
+  parent: one(celestialBodies, {
+    fields: [celestialBodies.parentId],
+    references: [celestialBodies.id],
     relationName: 'parent'
   }),
 
-  children: many(bodies, {
+  children: many(celestialBodies, {
     relationName: 'parent'
   })
 }))
