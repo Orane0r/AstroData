@@ -8,6 +8,7 @@ export default defineNuxtConfig({
   ],
 
   devtools: {
+
     enabled: true
   },
 
@@ -17,7 +18,18 @@ export default defineNuxtConfig({
     '/': { prerender: true }
   },
 
+  sourcemap: {
+    server: true,
+    client: true
+  },
+
   compatibilityDate: '2025-01-15',
+
+  nitro: {
+    experimental: {
+      tasks: true
+    }
+  },
 
   hub: {
     db: 'sqlite'

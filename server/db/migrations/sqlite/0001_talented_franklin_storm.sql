@@ -1,0 +1,1 @@
+ALTER TABLE `celestial_bodies` DROP COLUMN `discoveryYear`;

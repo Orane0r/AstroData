@@ -8,6 +8,13 @@
       "when": 1780168385122,
       "tag": "0000_wealthy_mister_fear",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1780396106585,
+      "tag": "0001_talented_franklin_storm",
+      "breakpoints": true
     }
   ]
 }

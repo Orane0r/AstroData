@@ -37,7 +37,6 @@ export const celestialBodies = sqliteTable('celestial_bodies', {
   // km
   semimajorAxis: real().notNull().default(0),
   alternativeName: text(),
-  discoveryYear: int(),
   imageUrl: text()
 })
 
