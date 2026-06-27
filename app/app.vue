@@ -58,13 +58,13 @@ useSeoMeta({
     <UFooter>
       <template #left>
         <p class="text-sm text-muted">
-          Built with Nuxt UI • © {{ new Date().getFullYear() }}
+          Developed by Orane Orveillon
         </p>
       </template>
 
       <template #right>
         <UButton
-          to="https://github.com/nuxt-ui-templates/starter"
+          to="https://github.com/Orane0r"
           target="_blank"
           icon="i-simple-icons-github"
           aria-label="GitHub"
