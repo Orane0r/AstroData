@@ -52,7 +52,9 @@ const items = ref<NavigationMenuItem[]>([
 
         <UNavigationMenu
           :items="items"
+          variant="link"
           class="pl-10"
+          color="neutral"
         />
       </template>
 
