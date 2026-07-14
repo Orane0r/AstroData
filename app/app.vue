@@ -59,10 +59,8 @@ const items = ref<NavigationMenuItem[]>([
       </template>
 
       <template #right>
-        <UColorModeButton />
-
         <UButton
-          to="https://github.com/nuxt-ui-templates/starter"
+          to="https://github.com/Orane0r/AstroData"
           target="_blank"
           icon="i-simple-icons-github"
           aria-label="GitHub"
@@ -76,7 +74,7 @@ const items = ref<NavigationMenuItem[]>([
       <NuxtPage />
     </UMain>
 
-    <USeparator icon="i-simple-icons-nuxtdotjs" />
+    <USeparator />
 
     <UFooter>
       <template #left>
@@ -86,6 +84,14 @@ const items = ref<NavigationMenuItem[]>([
       </template>
 
       <template #right>
+        <UButton
+          to="https://www.linkedin.com/in/orane-orveillon-9aab7a1b7"
+          target="_blank"
+          icon="i-simple-icons-linkedin"
+          aria-label="LinkedIn"
+          color="neutral"
+          variant="ghost"
+        />
         <UButton
           to="https://github.com/Orane0r"
           target="_blank"
