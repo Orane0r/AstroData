@@ -1,4 +1,6 @@
-<script setup>
+<script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui'
+
 useHead({
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
@@ -22,6 +24,22 @@ useSeoMeta({
   ogImage: 'https://ui.nuxt.com/assets/templates/nuxt/starter-light.png',
   twitterCard: 'summary_large_image'
 })
+
+const items = ref<NavigationMenuItem[]>([
+  {
+    label: 'Catalogue',
+    to: '/catalog',
+    active: true
+  },
+  {
+    label: 'Graphiques',
+    to: '/graphs'
+  },
+  {
+    label: 'Comparateur',
+    to: '/comparator'
+  }
+])
 </script>
 
 <template>
@@ -32,7 +50,10 @@ useSeoMeta({
           <AppLogo class="w-auto h-6 shrink-0" />
         </NuxtLink>
 
-        <TemplateMenu />
+        <UNavigationMenu
+          :items="items"
+          class="pl-10"
+        />
       </template>
 
       <template #right>
