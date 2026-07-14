@@ -3,6 +3,12 @@
     <UPageHero
       description="Explorez et comparez les objets de notre univers."
       orientation="horizontal"
+      :links="[{
+        label: 'Commencer',
+        icon: 'i-lucide-rocket',
+        to: '/catalog',
+        size: 'xl'
+      }]"
     >
       <template #title>
         Le cosmos,<br>
