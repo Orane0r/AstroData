@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
+    '@nuxtjs/google-fonts',
     '@nuxt/eslint',
     '@nuxt/ui',
     '@nuxt/test-utils',
@@ -8,11 +9,14 @@ export default defineNuxtConfig({
   ],
 
   devtools: {
-
     enabled: true
   },
 
   css: ['~/assets/css/main.css'],
+
+  colorMode: {
+    preference: 'dark'
+  },
 
   routeRules: {
     '/': { prerender: true }
