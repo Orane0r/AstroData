@@ -9,6 +9,11 @@ export default defineAppConfig({
       slots: {
         title: 'font-display'
       }
+    },
+    pageHeader: {
+      slots: {
+        root: 'border-b-0 px-5'
+      }
     }
   }
 })
