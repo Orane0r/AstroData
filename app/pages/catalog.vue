@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import type { TableColumn } from '@nuxt/ui'
 
-const { data: countData } = await useFetch('/api/celestial-bodies/count')
+const { data: count } = await useFetch('/api/celestial-bodies/count')
 const { data: bodies, pending: loading } = await useFetch('/api/celestial-bodies')
+const { data: types } = await useFetch('/api/celestial-bodies/types')
 
 const columns: TableColumn<CelestialBody>[] = [
   {
@@ -56,7 +57,7 @@ const columns: TableColumn<CelestialBody>[] = [
   <UPage>
     <UPageHeader
       title="Catalogue"
-      :description="`${countData?.count ?? 0} objets · filtrez, triez, explorez`"
+      :description="`${count} objets · filtrez, triez, explorez`"
     />
 
     <UPageBody>
