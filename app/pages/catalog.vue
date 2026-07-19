@@ -76,7 +76,7 @@ const columns: TableColumn<CelestialBody>[] = [
       :description="`${count} objets · filtrez, triez, explorez`"
     />
 
-    <UPageBody class="flex flex-col space-0 gap-0">
+    <UPageBody :ui="{ base: 'mt-2  space-y-5' }">
       <div class="flex flex-row gap-2">
         <UBadge
           v-for="type in types"
