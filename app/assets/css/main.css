@@ -16,4 +16,15 @@
   --color-green-800: #016538;
   --color-green-900: #0A5331;
   --color-green-950: #052E16;
+
+  /* Custom animations for orbiting planets */
+  --animate-orbit-slow: orbit 30s linear infinite;
+  --animate-orbit-medium: orbit 22s linear infinite;
+  --animate-orbit-fast: orbit 14s linear infinite;
+  --animate-orbit-faster: orbit 8s linear infinite;
+
+  @keyframes orbit {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
 }
