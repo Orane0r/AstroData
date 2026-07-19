@@ -14,6 +14,7 @@ const columns: TableColumn<CelestialBody>[] = [
       return name || '–'
     }
   },
+  // TODO mettre un badge
   {
     accessorKey: 'type',
     header: 'Type'
@@ -24,6 +25,11 @@ const columns: TableColumn<CelestialBody>[] = [
     cell: ({ row }) => {
       const meanRadius = row.getValue('meanRadius')
       return meanRadius ? `${meanRadius} km` : '–'
+    },
+    meta: {
+      class: {
+        td: 'text-right'
+      }
     }
   },
   {
@@ -36,6 +42,11 @@ const columns: TableColumn<CelestialBody>[] = [
     cell: ({ getValue }) => {
       const volume = getValue<number | null>()
       return volume === null ? '–' : `${volume.toExponential(2)} m³`
+    },
+    meta: {
+      class: {
+        td: 'text-right'
+      }
     }
   },
   {
@@ -48,6 +59,11 @@ const columns: TableColumn<CelestialBody>[] = [
     cell: ({ getValue }) => {
       const mass = getValue<number | null>()
       return mass === null ? '–' : `${mass.toExponential(2)} kg`
+    },
+    meta: {
+      class: {
+        td: 'text-right'
+      }
     }
   }
 ]
@@ -60,12 +76,25 @@ const columns: TableColumn<CelestialBody>[] = [
       :description="`${count} objets · filtrez, triez, explorez`"
     />
 
-    <UPageBody>
+    <UPageBody class="flex flex-col space-0 gap-0">
+      <div class="flex flex-row gap-2">
+        <UBadge
+          v-for="type in types"
+          :key="type"
+          :label="type"
+          variant="subtle"
+          class="rounded-full"
+        />
+      </div>
+
+      <!-- TODO prendre la hauteur restante du screen -->
       <UTable
+        class="border border-accented rounded-lg h-100"
         :data="bodies"
         :columns
         :loading
         sticky
+        virtualize
       />
     </UPageBody>
   </UPage>

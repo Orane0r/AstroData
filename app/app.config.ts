@@ -12,11 +12,16 @@ export default defineAppConfig({
     },
     pageHeader: {
       slots: {
-        root: 'border-b-0 px-5'
+        root: 'border-b-0 p-5'
       }
     },
     pageBody: {
       base: 'px-5'
+    },
+    table: {
+      slots: {
+        th: 'text-center uppercase'
+      }
     }
   }
 })
