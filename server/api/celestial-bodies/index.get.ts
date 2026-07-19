@@ -1,11 +1,10 @@
+import { asc } from 'drizzle-orm'
 import { celestialBodies } from '~~/server/db/schema'
-import { count } from 'drizzle-orm'
 import { db } from 'hub:db'
 
 export default defineEventHandler(async () => {
-  const [result] = await db
-    .select({ count: count() })
+  return await db
+    .select()
     .from(celestialBodies)
-
-  return result
+    .orderBy(asc(schema.celestialBodies.name))
 })

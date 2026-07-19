@@ -1,14 +1,20 @@
 <script lang="ts" setup>
 const { data: countData } = await useFetch('/api/celestial-bodies/count')
+const { data: bodies, pending: loading } = await useFetch('/api/celestial-bodies')
 </script>
 
 <template>
   <UPage>
     <UPageHeader
-      title="Catalog"
+      title="Catalogue"
       :description="`${countData?.count ?? 0} objets · filtrez, triez, explorez`"
     />
 
-    <UPageBody />
+    <UPageBody>
+      <UTable
+        :data="bodies"
+        :loading
+      />
+    </UPageBody>
   </UPage>
 </template>

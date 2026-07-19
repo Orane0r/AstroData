@@ -14,6 +14,9 @@ export default defineAppConfig({
       slots: {
         root: 'border-b-0 px-5'
       }
+    },
+    pageBody: {
+      base: 'px-5'
     }
   }
 })
