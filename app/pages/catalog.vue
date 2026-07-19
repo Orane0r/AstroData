@@ -76,7 +76,9 @@ const columns: TableColumn<CelestialBody>[] = [
       :description="`${count} objets · filtrez, triez, explorez`"
     />
 
-    <UPageBody :ui="{ base: 'mt-2  space-y-5' }">
+    <UPageBody
+      :ui="{ base: 'mt-5 space-y-5 pb-5' }"
+    >
       <div class="flex flex-row gap-2">
         <UBadge
           v-for="type in types"
@@ -88,8 +90,10 @@ const columns: TableColumn<CelestialBody>[] = [
       </div>
 
       <!-- TODO prendre la hauteur restante du screen -->
+      <!-- TODO sorting -->
+      <!-- TODO faire une pagination à la place ? -->
       <UTable
-        class="border border-accented rounded-lg h-100"
+        class="border border-accented rounded-lg h-[calc(calc(100vh-var(--ui-header-height))-239px)]"
         :data="bodies"
         :columns
         :loading

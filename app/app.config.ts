@@ -12,7 +12,7 @@ export default defineAppConfig({
     },
     pageHeader: {
       slots: {
-        root: 'border-b-0 p-5'
+        root: 'border-b-0 px-5 pt-10 pb-5'
       }
     },
     pageBody: {
