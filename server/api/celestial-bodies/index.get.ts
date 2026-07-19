@@ -6,5 +6,5 @@ export default defineEventHandler(async () => {
   return await db
     .select()
     .from(celestialBodies)
-    .orderBy(asc(schema.celestialBodies.name))
+    .orderBy(asc(celestialBodies.name))
 })
