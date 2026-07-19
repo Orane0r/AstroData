@@ -1,16 +1,14 @@
 <script lang="ts" setup>
-
+const { data: countData } = await useFetch('/api/celestial-bodies/count')
 </script>
 
 <template>
   <UPage>
     <UPageHeader
       title="Catalog"
-      description="A responsive page header with title, description and actions."
+      :description="`${countData?.count ?? 0} objets · filtrez, triez, explorez`"
     />
 
-    <UPageBody>
-      catalog
-    </UPageBody>
+    <UPageBody />
   </UPage>
 </template>
