@@ -24,6 +24,7 @@
     "@nuxt/test-utils": "^4.0.3",
     "@nuxt/ui": "^4.8.1",
     "@nuxthub/core": "0.10.7",
+    "@solar-icons/nuxt": "1.2.1",
     "@types/lodash": "^4.17.24",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",

@@ -5,7 +5,8 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/ui',
     '@nuxt/test-utils',
-    '@nuxthub/core'
+    '@nuxthub/core',
+    '@solar-icons/nuxt'
   ],
 
   devtools: {
@@ -46,5 +47,15 @@ export default defineNuxtConfig({
         braceStyle: '1tbs'
       }
     }
+  },
+
+  solarIcons: {
+    namePrefix: 'Solar',
+    autoImport: true,
+    provider: true,
+    color: 'currentColor',
+    size: 24,
+    weight: 'Linear',
+    mirrored: false
   }
 })
