@@ -28,8 +28,7 @@ useSeoMeta({
 const items = ref<NavigationMenuItem[]>([
   {
     label: 'Catalogue',
-    to: '/catalog',
-    active: true
+    to: '/catalog'
   },
   {
     label: 'Graphiques',
