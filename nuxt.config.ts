@@ -17,6 +17,24 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'dark'
   },
+  ui: {
+    theme: {
+      colors: [
+        'primary',
+        'secondary',
+        'success',
+        'info',
+        'warning',
+        'error',
+        'neutral',
+        // Custom colors
+        'rock',
+        'star',
+        'stardust',
+        'earth'
+      ]
+    }
+  },
 
   routeRules: {
     '/': { prerender: true }

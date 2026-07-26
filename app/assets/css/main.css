@@ -17,6 +17,18 @@
   --color-green-900: #0A5331;
   --color-green-950: #052E16;
 
+  --color-brown-50: #efeaea;
+  --color-brown-100: #e0d5d5;
+  --color-brown-200: #c5aeae;
+  --color-brown-300: #ae8484;
+  --color-brown-400: #8f6161;
+  --color-brown-500: #644343;
+  --color-brown-600: #523636;
+  --color-brown-700: #3f2828;
+  --color-brown-800: #2f1d1d;
+  --color-brown-900: #1c1010;
+  --color-brown-950: #120909;
+
   /* Custom animations for orbiting planets */
   --animate-orbit-slow: orbit 30s linear infinite;
   --animate-orbit-medium: orbit 22s linear infinite;

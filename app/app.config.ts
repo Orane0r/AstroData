@@ -3,7 +3,12 @@ export default defineAppConfig({
     colors: {
       primary: 'blue',
       secondary: 'purple',
-      neutral: 'slate'
+      neutral: 'slate',
+      // Custom colors
+      rock: 'gray',
+      star: 'yellow',
+      stardust: 'indigo',
+      earth: 'brown'
     },
     pageHero: {
       slots: {

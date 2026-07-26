@@ -85,6 +85,8 @@ const columns: TableColumn<CelestialBody>[] = [
           :key="type"
           :label="type"
           variant="subtle"
+          :color="BODY_TYPE_CONFIG[type]!.color"
+          :icon="BODY_TYPE_CONFIG[type]!.icon"
           class="rounded-full"
         />
       </div>
