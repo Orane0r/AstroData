@@ -26,9 +26,6 @@ importers:
       '@nuxthub/core':
         specifier: 0.10.7
         version: 0.10.7(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(db0@0.3.4(@libsql/client@0.17.3)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260529.1)(@libsql/client@0.17.3)))(ioredis@5.10.1)(magicast@0.5.3)(typescript@6.0.3)(vue-tsc@3.3.3(typescript@6.0.3))
-      '@solar-icons/nuxt':
-        specifier: 1.2.1
-        version: 1.2.1(magicast@0.5.3)(vue@3.5.34(typescript@6.0.3))
       '@types/lodash':
         specifier: ^4.17.24
         version: 4.17.24
@@ -2289,15 +2286,6 @@ packages:
   '@sindresorhus/merge-streams@4.0.0':
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
-
-  '@solar-icons/nuxt@1.2.1':
-    resolution: {integrity: sha512-xVA+dNuNSUk0N8RIZxygGACPQaeVEjtubj6IvZ4WKmVySD7mlnLC3B5keiWU9LE3D02P3OCmEq20iVDBpiT/RQ==}
-    engines: {node: '>=18.0.0'}
-
-  '@solar-icons/vue@1.2.1':
-    resolution: {integrity: sha512-u8lwrrDmEKAjRLIregjVe2F8onMuh5U3B4VbdgAXqZORFH142Fi5wFJOV1A2Bq5CjH6MtHmuC4mZtQQK+Z1MRw==}
-    peerDependencies:
-      vue: '>=3.0.0'
 
   '@speed-highlight/core@1.2.15':
     resolution: {integrity: sha512-BMq1K3DsElxDWawkX6eLg9+CKJrTVGCBAWVuHXVUV2u0s2711qiChLSId6ikYPfxhdYocLNt3wWwSvDiTvFabw==}
@@ -8426,18 +8414,6 @@ snapshots:
   '@sindresorhus/is@7.2.0': {}
 
   '@sindresorhus/merge-streams@4.0.0': {}
-
-  '@solar-icons/nuxt@1.2.1(magicast@0.5.3)(vue@3.5.34(typescript@6.0.3))':
-    dependencies:
-      '@nuxt/kit': 4.4.6(magicast@0.5.3)
-      '@solar-icons/vue': 1.2.1(vue@3.5.34(typescript@6.0.3))
-    transitivePeerDependencies:
-      - magicast
-      - vue
-
-  '@solar-icons/vue@1.2.1(vue@3.5.34(typescript@6.0.3))':
-    dependencies:
-      vue: 3.5.34(typescript@6.0.3)
 
   '@speed-highlight/core@1.2.15': {}
 
