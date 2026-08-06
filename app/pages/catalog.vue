@@ -67,6 +67,13 @@ const columns: TableColumn<CelestialBody>[] = [
     }
   }
 ]
+
+const sortedTypes = computed(() => {
+  if (types.value) {
+    return [...types.value].sort((a, b) => BODY_TYPE_CONFIG[a].order - BODY_TYPE_CONFIG[b].order)
+  }
+  return []
+})
 </script>
 
 <template>
@@ -81,7 +88,7 @@ const columns: TableColumn<CelestialBody>[] = [
     >
       <div class="flex flex-row gap-2">
         <UBadge
-          v-for="type in types"
+          v-for="type in sortedTypes"
           :key="type"
           :label="type"
           variant="subtle"
