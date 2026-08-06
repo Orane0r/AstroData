@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { TableColumn } from '@nuxt/ui'
 
+const UBadge = resolveComponent('UBadge')
+
 const { data: count } = await useFetch('/api/celestial-bodies/count')
 const { data: bodies, pending: loading } = await useFetch('/api/celestial-bodies')
 const { data: types } = await useFetch('/api/celestial-bodies/types')
@@ -14,10 +16,21 @@ const columns: TableColumn<CelestialBody>[] = [
       return name || '–'
     }
   },
-  // TODO mettre un badge
   {
     accessorKey: 'type',
-    header: 'Type'
+    header: 'Type',
+    cell: ({ row }) => {
+      const type = row.getValue('type')
+      const config = BODY_TYPE_CONFIG[type as keyof typeof BODY_TYPE_CONFIG]
+      return config
+        ? h(UBadge, {
+            class: 'rounded-full',
+            variant: 'subtle',
+            color: config.color,
+            icon: config.icon
+          }, () => config.label)
+        : '–'
+    }
   },
   {
     accessorKey: 'meanRadius',
@@ -87,6 +100,7 @@ const sortedTypes = computed(() => {
       :ui="{ base: 'mt-5 space-y-5 pb-5' }"
     >
       <div class="flex flex-row gap-2">
+        <!-- TODO rajouter nombre d'items à droite -->
         <UBadge
           v-for="type in sortedTypes"
           :key="type"
