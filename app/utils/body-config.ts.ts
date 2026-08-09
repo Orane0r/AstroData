@@ -1,9 +1,10 @@
+import type { CelestialBodyType } from '~~/shared/types/db'
 import type { Color } from '~/types/color'
 
 /**
  * Config for displaying bodies on screen.
  */
-type BodyTypeConfig = Record<CelestialBody['type'], {
+type BodyTypeConfig = Record<CelestialBodyType, {
   label: string
   color: Color
   icon: string

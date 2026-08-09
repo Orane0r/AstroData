@@ -1,9 +1,15 @@
 <script lang="ts" setup>
 import type { TableColumn } from '@nuxt/ui'
+import { CELESTIAL_BODY_TYPES } from '~~/server/db/schema'
 
 const UBadge = resolveComponent('UBadge')
 
 const { data: count } = await useFetch('/api/celestial-bodies/count')
+const { data: countByType } = await useFetch('/api/celestial-bodies/count', {
+  query: {
+    type: CELESTIAL_BODY_TYPES
+  }
+})
 const { data: bodies, pending: loading } = await useFetch('/api/celestial-bodies')
 const { data: types } = await useFetch('/api/celestial-bodies/types')
 
@@ -109,7 +115,13 @@ const sortedTypes = computed(() => {
           :color="BODY_TYPE_CONFIG[type]!.color"
           :icon="BODY_TYPE_CONFIG[type]!.icon"
           class="rounded-full"
-        />
+        >
+          <template #trailing>
+            <span class="text-dimmed pl-2">
+              {{ countByType![type] }}
+            </span>
+          </template>
+        </UBadge>
       </div>
 
       <!-- TODO prendre la hauteur restante du screen -->
