@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import type { TableColumn } from '@nuxt/ui'
-import { CELESTIAL_BODY_TYPES } from '~~/server/db/schema'
+import { CELESTIAL_BODY_TYPES } from '~~/shared/constants/db'
+import { sum } from 'lodash'
 
 const UBadge = resolveComponent('UBadge')
 
-const { data: count } = await useFetch('/api/celestial-bodies/count')
-const { data: countByType } = await useFetch('/api/celestial-bodies/count', {
+const { data: count } = await useFetch('/api/celestial-bodies/count', {
   query: {
     type: CELESTIAL_BODY_TYPES
   }
@@ -87,6 +87,11 @@ const columns: TableColumn<CelestialBody>[] = [
   }
 ]
 
+const totalCount = computed(() => {
+  if (!count.value) return 0
+  return sum(Object.values(count.value))
+})
+
 const sortedTypes = computed(() => {
   if (types.value) {
     return [...types.value].sort((a, b) => BODY_TYPE_CONFIG[a].order - BODY_TYPE_CONFIG[b].order)
@@ -99,7 +104,7 @@ const sortedTypes = computed(() => {
   <UPage>
     <UPageHeader
       title="Catalogue"
-      :description="`${count} objets · filtrez, triez, explorez`"
+      :description="`${totalCount} objets · filtrez, triez, explorez`"
     />
 
     <UPageBody
@@ -118,7 +123,7 @@ const sortedTypes = computed(() => {
         >
           <template #trailing>
             <span class="text-dimmed pl-2">
-              {{ countByType![type] }}
+              {{ count![type] }}
             </span>
           </template>
         </UBadge>

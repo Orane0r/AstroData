@@ -6,9 +6,8 @@
 import { int, real, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
 import type { AnySQLiteColumn } from 'drizzle-orm/sqlite-core'
+import { CELESTIAL_BODY_TYPES } from '~~/shared/constants/db'
 import { relations } from 'drizzle-orm'
-
-export const CELESTIAL_BODY_TYPES = ['Planet', 'Moon', 'Star', 'Asteroid', 'Comet', 'Dwarf planet'] as const
 
 export const celestialBodies = sqliteTable('celestial_bodies', {
   id: int().primaryKey({ autoIncrement: true }),

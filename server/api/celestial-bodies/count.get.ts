@@ -1,8 +1,9 @@
-import { CELESTIAL_BODY_TYPES, celestialBodies } from '~~/server/db/schema'
 import { count, inArray } from 'drizzle-orm'
 
+import { CELESTIAL_BODY_TYPES } from '~~/shared/constants/db'
 import type { CelestialBodyType } from '~~/shared/types/db'
 import type { H3Event } from 'h3'
+import { celestialBodies } from '~~/server/db/schema'
 import { db } from 'hub:db'
 import { z } from 'zod'
 
