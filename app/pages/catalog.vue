@@ -1,15 +1,10 @@
 <script lang="ts" setup>
 import type { TableColumn } from '@nuxt/ui'
-import { CELESTIAL_BODY_TYPES } from '~~/shared/constants/db'
 import { sum } from 'lodash'
 
 const UBadge = resolveComponent('UBadge')
 
-const { data: count } = await useFetch('/api/celestial-bodies/count', {
-  query: {
-    type: CELESTIAL_BODY_TYPES
-  }
-})
+const { data: count } = await useFetch('/api/celestial-bodies/count')
 const { data: bodies, pending: loading } = await useFetch('/api/celestial-bodies')
 const { data: types } = await useFetch('/api/celestial-bodies/types')
 
