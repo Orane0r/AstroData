@@ -2,6 +2,7 @@ import { asc, count, inArray } from 'drizzle-orm'
 
 import { CELESTIAL_BODY_TYPES } from '~~/shared/constants/db'
 import type { PaginatedApiResult } from '~~/shared/types/api'
+import { SQL_ORDER_BODY_TYPE } from '~~/server/utils/sql'
 import { celestialBodies } from '~~/server/db/schema'
 import { db } from 'hub:db'
 import { transformIntoArray } from '~~/server/utils/transform'
@@ -28,7 +29,7 @@ export default defineEventHandler(async (event): Promise<PaginatedApiResult<Cele
       .where(whereClause)
       .limit(pageSize)
       .offset((page - 1) * pageSize)
-      .orderBy(asc(celestialBodies.name)),
+      .orderBy(SQL_ORDER_BODY_TYPE, asc(celestialBodies.name)),
     db.select({ total: count() }).from(celestialBodies).where(whereClause)
   ])
 

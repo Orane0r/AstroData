@@ -103,13 +103,6 @@ const totalCount = computed(() => {
   return sum(Object.values(count.value))
 })
 
-const sortedTypes = computed(() => {
-  if (types.value) {
-    return [...types.value].sort((a, b) => BODY_TYPE_CONFIG[a].order - BODY_TYPE_CONFIG[b].order)
-  }
-  return []
-})
-
 const onClickType = (type: CelestialBodyType) => {
   if (selectedTypes.value.includes(type)) {
     selectedTypes.value = selectedTypes.value.filter(t => t !== type)
@@ -147,7 +140,7 @@ const onClickType = (type: CelestialBodyType) => {
         </template>
         <template v-else>
           <UBadge
-            v-for="type in sortedTypes"
+            v-for="type in types"
             :key="type"
             :label="type"
             :variant="selectedTypes.includes(type) ? 'subtle' : 'outline'"
@@ -166,6 +159,7 @@ const onClickType = (type: CelestialBodyType) => {
       </div>
 
       <!-- TODO sorting -->
+      <!-- TODO rajouter une colonne image -->
       <UTable
         :data="bodies"
         :columns
@@ -177,6 +171,7 @@ const onClickType = (type: CelestialBodyType) => {
         v-model:page="page"
         :total="total"
         :items-per-page="pageSize"
+        show-edges
         class="flex justify-center"
       />
     </UPageBody>

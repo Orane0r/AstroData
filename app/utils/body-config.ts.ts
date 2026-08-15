@@ -1,3 +1,4 @@
+import { CELESTIAL_BODY_TYPE_ORDER } from '~~/shared/constants/db'
 import type { CelestialBodyType } from '~~/shared/types/db'
 import type { Color } from '~/types/color'
 
@@ -16,36 +17,36 @@ export const BODY_TYPE_CONFIG: BodyTypeConfig = {
     label: 'Planète',
     color: 'primary',
     icon: 'i-solar-planet-outline',
-    order: 1
+    order: CELESTIAL_BODY_TYPE_ORDER.Planet
   },
   'Moon': {
     label: 'Lune',
     color: 'rock',
     icon: 'i-solar-moon-outline',
-    order: 2
+    order: CELESTIAL_BODY_TYPE_ORDER.Moon
   },
   'Asteroid': {
     label: 'Astéroïde',
     color: 'rock',
     icon: 'i-solar-asteroid-outline',
-    order: 3
+    order: CELESTIAL_BODY_TYPE_ORDER.Asteroid
   },
   'Comet': {
     label: 'Comète',
     color: 'stardust',
     icon: 'i-solar-star-fall-minimalistic-outline',
-    order: 4
+    order: CELESTIAL_BODY_TYPE_ORDER.Comet
   },
   'Dwarf planet': {
     label: 'Planète naine',
     color: 'earth',
     icon: 'i-solar-planet-3-outline',
-    order: 5
+    order: CELESTIAL_BODY_TYPE_ORDER['Dwarf planet']
   },
   'Star': {
     label: 'Étoile',
     color: 'star',
     icon: 'i-solar-star-outline',
-    order: 6
+    order: CELESTIAL_BODY_TYPE_ORDER.Star
   }
 }
