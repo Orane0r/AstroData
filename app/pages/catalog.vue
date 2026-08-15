@@ -177,6 +177,7 @@ const onClickType = (type: CelestialBodyType) => {
         v-model:page="page"
         :total="total"
         :items-per-page="pageSize"
+        class="flex justify-center"
       />
     </UPageBody>
   </UPage>
