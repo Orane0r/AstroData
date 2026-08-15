@@ -8,15 +8,15 @@ const page = ref(1)
 const pageSize = ref(15)
 
 const { data: count } = await useFetch('/api/celestial-bodies/count')
-const { data: response, pending: loading } = await useFetch('/api/celestial-bodies', {
+const { data: bodiesResult, pending: bodiesLoading } = await useFetch('/api/celestial-bodies', {
   query: {
     page,
     pageSize
   },
   watch: [page, pageSize]
 })
-const bodies = computed(() => response.value?.data ?? [])
-const total = computed(() => response.value?.total ?? 0)
+const bodies = computed(() => bodiesResult.value?.data ?? [])
+const total = computed(() => bodiesResult.value?.total ?? 0)
 
 const { data: types } = await useFetch('/api/celestial-bodies/types')
 
@@ -140,7 +140,7 @@ const sortedTypes = computed(() => {
       <UTable
         :data="bodies"
         :columns
-        :loading
+        :loading="bodiesLoading"
         sticky
       />
 

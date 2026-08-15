@@ -1,5 +1,6 @@
 import { asc, count } from 'drizzle-orm'
 
+import type { PaginatedApiResult } from '~~/shared/types/api'
 import { celestialBodies } from '~~/server/db/schema'
 import { db } from 'hub:db'
 import z from 'zod'
@@ -9,7 +10,7 @@ const querySchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).default(20)
 })
 
-export default defineEventHandler(async (event): Promise<{ data: CelestialBody[], total: number }> => {
+export default defineEventHandler(async (event): Promise<PaginatedApiResult<CelestialBody>> => {
   const { page, pageSize } = await getValidatedQuery(event, querySchema.parse)
 
   const [data, totalResult] = await Promise.all([
