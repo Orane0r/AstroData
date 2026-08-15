@@ -4,8 +4,20 @@ import { sum } from 'lodash'
 
 const UBadge = resolveComponent('UBadge')
 
+const page = ref(1)
+const pageSize = ref(15)
+
 const { data: count } = await useFetch('/api/celestial-bodies/count')
-const { data: bodies, pending: loading } = await useFetch('/api/celestial-bodies')
+const { data: response, pending: loading } = await useFetch('/api/celestial-bodies', {
+  query: {
+    page,
+    pageSize
+  },
+  watch: [page, pageSize]
+})
+const bodies = computed(() => response.value?.data ?? [])
+const total = computed(() => response.value?.total ?? 0)
+
 const { data: types } = await useFetch('/api/celestial-bodies/types')
 
 const columns: TableColumn<CelestialBody>[] = [
@@ -97,6 +109,7 @@ const sortedTypes = computed(() => {
 
 <template>
   <UPage>
+    <!-- TODO gérer chargement du count (pareil pour badges) -->
     <UPageHeader
       title="Catalogue"
       :description="`${totalCount} objets · filtrez, triez, explorez`"
@@ -106,7 +119,6 @@ const sortedTypes = computed(() => {
       :ui="{ base: 'mt-5 space-y-5 pb-5' }"
     >
       <div class="flex flex-row gap-2">
-        <!-- TODO rajouter nombre d'items à droite -->
         <UBadge
           v-for="type in sortedTypes"
           :key="type"
@@ -124,16 +136,18 @@ const sortedTypes = computed(() => {
         </UBadge>
       </div>
 
-      <!-- TODO prendre la hauteur restante du screen -->
       <!-- TODO sorting -->
-      <!-- TODO faire une pagination à la place ? -->
       <UTable
-        class="border border-accented rounded-lg h-[calc(calc(100vh-var(--ui-header-height))-239px)]"
         :data="bodies"
         :columns
         :loading
         sticky
-        virtualize
+      />
+
+      <UPagination
+        v-model:page="page"
+        :total="total"
+        :items-per-page="pageSize"
       />
     </UPageBody>
   </UPage>
