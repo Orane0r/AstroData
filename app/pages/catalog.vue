@@ -7,7 +7,7 @@ const UBadge = resolveComponent('UBadge')
 const page = ref(1)
 const pageSize = ref(15)
 
-const { data: count } = await useFetch('/api/celestial-bodies/count')
+const { data: count, pending: countLoading } = await useFetch('/api/celestial-bodies/count')
 const { data: bodiesResult, pending: bodiesLoading } = await useFetch('/api/celestial-bodies', {
   query: {
     page,
@@ -109,31 +109,47 @@ const sortedTypes = computed(() => {
 
 <template>
   <UPage>
-    <!-- TODO gérer chargement du count (pareil pour badges) -->
     <UPageHeader
       title="Catalogue"
-      :description="`${totalCount} objets · filtrez, triez, explorez`"
-    />
+    >
+      <template #description>
+        <template v-if="countLoading">
+          <USkeleton class="h-6 w-150" />
+        </template>
+        <template v-else>
+          {{ `${totalCount} objets · filtrez, triez, explorez` }}
+        </template>
+      </template>
+    </UPageHeader>
 
     <UPageBody
       :ui="{ base: 'mt-5 space-y-5 pb-5' }"
     >
       <div class="flex flex-row gap-2">
-        <UBadge
-          v-for="type in sortedTypes"
-          :key="type"
-          :label="type"
-          variant="subtle"
-          :color="BODY_TYPE_CONFIG[type]!.color"
-          :icon="BODY_TYPE_CONFIG[type]!.icon"
-          class="rounded-full"
-        >
-          <template #trailing>
-            <span class="text-dimmed pl-2">
-              {{ count![type] }}
-            </span>
-          </template>
-        </UBadge>
+        <template v-if="countLoading">
+          <USkeleton
+            v-for="i in 6"
+            :key="i"
+            class="h-6 w-20 rounded-full"
+          />
+        </template>
+        <template v-else>
+          <UBadge
+            v-for="type in sortedTypes"
+            :key="type"
+            :label="type"
+            variant="subtle"
+            :color="BODY_TYPE_CONFIG[type]!.color"
+            :icon="BODY_TYPE_CONFIG[type]!.icon"
+            class="rounded-full"
+          >
+            <template #trailing>
+              <span class="text-dimmed pl-2">
+                {{ count![type] }}
+              </span>
+            </template>
+          </UBadge>
+        </template>
       </div>
 
       <!-- TODO sorting -->
