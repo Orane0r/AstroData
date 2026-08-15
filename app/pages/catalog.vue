@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import type { TableColumn } from '@nuxt/ui'
 import { sum } from 'lodash'
+import { CELESTIAL_BODY_TYPES } from '~~/shared/constants/db'
 
 const UBadge = resolveComponent('UBadge')
+
+const selectedTypes = ref<string[]>([...CELESTIAL_BODY_TYPES])
 
 const page = ref(1)
 const pageSize = ref(15)
@@ -105,6 +108,14 @@ const sortedTypes = computed(() => {
   }
   return []
 })
+
+const onClickType = (type: string) => {
+  if (selectedTypes.value.includes(type)) {
+    selectedTypes.value = selectedTypes.value.filter(t => t !== type)
+  } else {
+    selectedTypes.value.push(type)
+  }
+}
 </script>
 
 <template>
@@ -138,10 +149,11 @@ const sortedTypes = computed(() => {
             v-for="type in sortedTypes"
             :key="type"
             :label="type"
-            variant="subtle"
-            :color="BODY_TYPE_CONFIG[type]!.color"
+            :variant="selectedTypes.includes(type) ? 'subtle' : 'outline'"
+            :color="selectedTypes.includes(type) ? BODY_TYPE_CONFIG[type]!.color : 'neutral'"
             :icon="BODY_TYPE_CONFIG[type]!.icon"
-            class="rounded-full"
+            class="rounded-full cursor-pointer"
+            @click="onClickType(type)"
           >
             <template #trailing>
               <span class="text-dimmed pl-2">
