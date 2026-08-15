@@ -1,22 +1,23 @@
 <script lang="ts" setup>
 import type { TableColumn } from '@nuxt/ui'
 import { sum } from 'lodash'
-import { CELESTIAL_BODY_TYPES } from '~~/shared/constants/db'
 
 const UBadge = resolveComponent('UBadge')
 
-const selectedTypes = ref<string[]>([...CELESTIAL_BODY_TYPES])
+const selectedTypes = ref<CelestialBodyType[]>(['Moon', 'Planet'])
 
 const page = ref(1)
 const pageSize = ref(15)
 
+// TODO gestion des erreurs
 const { data: count, pending: countLoading } = await useFetch('/api/celestial-bodies/count')
 const { data: bodiesResult, pending: bodiesLoading } = await useFetch('/api/celestial-bodies', {
   query: {
+    types: selectedTypes,
     page,
     pageSize
   },
-  watch: [page, pageSize]
+  watch: [selectedTypes, page, pageSize]
 })
 const bodies = computed(() => bodiesResult.value?.data ?? [])
 const total = computed(() => bodiesResult.value?.total ?? 0)
@@ -109,7 +110,7 @@ const sortedTypes = computed(() => {
   return []
 })
 
-const onClickType = (type: string) => {
+const onClickType = (type: CelestialBodyType) => {
   if (selectedTypes.value.includes(type)) {
     selectedTypes.value = selectedTypes.value.filter(t => t !== type)
   } else {

@@ -5,24 +5,19 @@ import type { CelestialBodyType } from '~~/shared/types/db'
 import type { H3Event } from 'h3'
 import { celestialBodies } from '~~/server/db/schema'
 import { db } from 'hub:db'
+import { transformIntoArray } from '~~/server/utils/transform'
 import { z } from 'zod'
 
 const querySchema = z.object({
-  type: z
-    .union([
-      z.enum(CELESTIAL_BODY_TYPES),
-      z.array(z.enum(CELESTIAL_BODY_TYPES))
-    ])
-    .optional()
-    .transform((val) => {
-      if (!val) return undefined
-      return Array.isArray(val) ? val : [val]
-    })
+  types: z.preprocess(
+    val => transformIntoArray(val),
+    z.array(z.enum(CELESTIAL_BODY_TYPES)).optional()
+  )
 })
 
 export default defineEventHandler(
   async (event: H3Event): Promise<Record<CelestialBodyType, number>> => {
-    const { type } = await getValidatedQuery(event, querySchema.parse)
+    const { types } = await getValidatedQuery(event, querySchema.parse)
 
     const query = db
       .select({
@@ -32,8 +27,8 @@ export default defineEventHandler(
       .from(celestialBodies)
       .groupBy(celestialBodies.type)
 
-    const results = type?.length
-      ? await query.where(inArray(celestialBodies.type, type))
+    const results = types?.length
+      ? await query.where(inArray(celestialBodies.type, types))
       : await query
 
     return Object.fromEntries(
