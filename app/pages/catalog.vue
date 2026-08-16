@@ -9,9 +9,14 @@ const selectedTypes = ref<CelestialBodyType[]>(['Moon', 'Planet'])
 const page = ref(1)
 const pageSize = ref(15)
 
-// TODO gestion des erreurs
 const { data: count, pending: countLoading } = await useFetch('/api/celestial-bodies/count')
-const { data: bodiesResult, pending: bodiesLoading } = await useFetch('/api/celestial-bodies', {
+const {
+  data: bodiesResult,
+  pending: bodiesLoading,
+  status: bodiesStatus,
+  error: bodiesError,
+  refresh: bodiesRefresh
+} = await useFetch('/api/celestial-bodies', {
   query: {
     types: selectedTypes,
     page,
@@ -19,6 +24,7 @@ const { data: bodiesResult, pending: bodiesLoading } = await useFetch('/api/cele
   },
   watch: [selectedTypes, page, pageSize]
 })
+
 const bodies = computed(() => bodiesResult.value?.data ?? [])
 const total = computed(() => bodiesResult.value?.total ?? 0)
 
@@ -165,9 +171,18 @@ const onClickType = (type: CelestialBodyType) => {
         :columns
         :loading="bodiesLoading"
         sticky
-      />
+      >
+        <template #empty>
+          <EmptyState
+            :status="bodiesStatus"
+            :error="bodiesError"
+            @retry="bodiesRefresh"
+          />
+        </template>
+      </UTable>
 
       <UPagination
+        v-if="bodiesStatus === 'success' && bodies.length > 0"
         v-model:page="page"
         :total="total"
         :items-per-page="pageSize"
