@@ -1,9 +1,10 @@
 import type { SolarSystem, SolarSystemBodyData } from '../types/solar-system'
 import { db, schema } from '@nuxthub/db'
 
-import type { BodyImage } from '../types/body_image'
+import type { WikipediaLink } from '../types/wikipedia-link'
 import _ from 'lodash'
 import { consola } from 'consola'
+import { fetchWikipediaImageUrl } from '../services/wikipedia'
 import fs from 'node:fs'
 import { mapSolarSystemBodiesApiToDb } from '../mappers/solar-system-to-db'
 
@@ -15,8 +16,8 @@ export async function seedDatabase() {
     fs.readFileSync('./server/data/solar_system.json', 'utf-8')
   ) as SolarSystem
   const wikiImages = JSON.parse(
-    fs.readFileSync('./server/data/wikipedia_images.json', 'utf-8')
-  ) as BodyImage[]
+    fs.readFileSync('./server/data/wikipedia.json', 'utf-8')
+  ) as WikipediaLink[]
   const [bodiesWithoutParent, bodiesWithParent] = _.partition(solarSystem.bodies, body => body.aroundPlanet == null)
 
   const cachedIds: { idDb: number, idApi: string }[] = []
@@ -27,7 +28,7 @@ export async function seedDatabase() {
     for (const body of bodiesWithoutParent) {
       const result = await tx
         .insert(schema.celestialBodies)
-        .values(mapSolarSystemBodiesApiToDb(body, null, findImageFromBody(wikiImages, body)))
+        .values(mapSolarSystemBodiesApiToDb(body, null, await findImageFromBody(wikiImages, body)))
 
       const id = Number(result.lastInsertRowid)
 
@@ -39,13 +40,17 @@ export async function seedDatabase() {
 
       await tx
         .insert(schema.celestialBodies)
-        .values(mapSolarSystemBodiesApiToDb(body, parentId, findImageFromBody(wikiImages, body)))
+        .values(mapSolarSystemBodiesApiToDb(body, parentId, await findImageFromBody(wikiImages, body)))
     }
   })
 
   consola.success('Database seeded successfully.')
 }
 
-function findImageFromBody(wikiImages: BodyImage[], body: SolarSystemBodyData): string | null {
-  return wikiImages.find(img => img.name == body.englishName)?.url ?? null
+async function findImageFromBody(wikiImages: WikipediaLink[], body: SolarSystemBodyData): Promise<string | null> {
+  const wikiUrl = wikiImages.find(img => img.name == body.englishName)?.url ?? null
+  if (wikiUrl) {
+    return await fetchWikipediaImageUrl(wikiUrl)
+  }
+  return null
 }

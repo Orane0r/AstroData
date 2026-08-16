@@ -3,6 +3,7 @@ import type { TableColumn } from '@nuxt/ui'
 import { sum } from 'lodash'
 
 const UBadge = resolveComponent('UBadge')
+const NuxtImg = resolveComponent('NuxtImg')
 
 const selectedTypes = ref<CelestialBodyType[]>(['Moon', 'Planet'])
 
@@ -31,6 +32,22 @@ const total = computed(() => bodiesResult.value?.total ?? 0)
 const { data: types } = await useFetch('/api/celestial-bodies/types')
 
 const columns: TableColumn<CelestialBody>[] = [
+  {
+    accessorKey: 'imageUrl',
+    header: '',
+    cell: ({ row }) => {
+      const image = row.getValue('imageUrl')
+      return image
+        ? h(NuxtImg, {
+            src: image,
+            alt: row.original.name,
+            height: 50,
+            width: 50,
+            class: 'rounded-xl '
+          })
+        : '–'
+    }
+  },
   {
     accessorKey: 'name',
     header: 'Nom',
