@@ -1,6 +1,7 @@
+import type { SolarSystem, SolarSystemBodyData } from '../types/solar-system'
 import { db, schema } from '@nuxthub/db'
 
-import type { SolarSystem } from './../types/solar-system'
+import type { BodyImage } from '../types/body_image'
 import _ from 'lodash'
 import { consola } from 'consola'
 import fs from 'node:fs'
@@ -13,6 +14,9 @@ export async function seedDatabase() {
   const solarSystem = JSON.parse(
     fs.readFileSync('./server/data/solar_system.json', 'utf-8')
   ) as SolarSystem
+  const wikiImages = JSON.parse(
+    fs.readFileSync('./server/data/wikipedia_images.json', 'utf-8')
+  ) as BodyImage[]
   const [bodiesWithoutParent, bodiesWithParent] = _.partition(solarSystem.bodies, body => body.aroundPlanet == null)
 
   const cachedIds: { idDb: number, idApi: string }[] = []
@@ -23,7 +27,7 @@ export async function seedDatabase() {
     for (const body of bodiesWithoutParent) {
       const result = await tx
         .insert(schema.celestialBodies)
-        .values(mapSolarSystemBodiesApiToDb(body, null, null))
+        .values(mapSolarSystemBodiesApiToDb(body, null, findImageFromBody(wikiImages, body)))
 
       const id = Number(result.lastInsertRowid)
 
@@ -35,9 +39,13 @@ export async function seedDatabase() {
 
       await tx
         .insert(schema.celestialBodies)
-        .values(mapSolarSystemBodiesApiToDb(body, parentId, null))
+        .values(mapSolarSystemBodiesApiToDb(body, parentId, findImageFromBody(wikiImages, body)))
     }
   })
 
   consola.success('Database seeded successfully.')
+}
+
+function findImageFromBody(wikiImages: BodyImage[], body: SolarSystemBodyData): string | null {
+  return wikiImages.find(img => img.name == body.englishName)?.url ?? null
 }
