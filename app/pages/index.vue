@@ -5,7 +5,7 @@
       orientation="horizontal"
       :links="[{
         label: 'Commencer',
-        icon: 'i-lucide-rocket',
+        icon: 'i-solar-rocket-outline',
         to: '/catalog',
         size: 'xl'
       }]"

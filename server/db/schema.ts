@@ -6,6 +6,7 @@
 import { int, real, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
 import type { AnySQLiteColumn } from 'drizzle-orm/sqlite-core'
+import { CELESTIAL_BODY_TYPES } from '~~/shared/constants/db'
 import { relations } from 'drizzle-orm'
 
 export const celestialBodies = sqliteTable('celestial_bodies', {
@@ -15,7 +16,7 @@ export const celestialBodies = sqliteTable('celestial_bodies', {
   ),
   name: text().notNull(),
   type: text({
-    enum: ['Planet', 'Moon', 'Star', 'Asteroid', 'Comet', 'Dwarf planet']
+    enum: CELESTIAL_BODY_TYPES
   }).notNull(),
   // km
   meanRadius: int().notNull(),

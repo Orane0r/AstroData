@@ -1,7 +1,7 @@
 import { BodyType, type SolarSystemBodyData } from '../types/solar-system'
-import type { NewCelestialBody } from '../../shared/types/db'
+import type { CelestialBodyType, NewCelestialBody } from '../../shared/types/db'
 
-const BODY_TYPE_MAP: Record<BodyType, NewCelestialBody['type']> = {
+const BODY_TYPE_MAP: Record<BodyType, CelestialBodyType> = {
   [BodyType.Planet]: 'Planet',
   [BodyType.Moon]: 'Moon',
   [BodyType.DwarfPlanet]: 'Dwarf planet',
