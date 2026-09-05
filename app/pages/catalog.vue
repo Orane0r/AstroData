@@ -1,11 +1,15 @@
 <script lang="ts" setup>
 import type { TableColumn } from '@nuxt/ui'
 import { sum } from 'lodash'
+import { refDebounced } from '@vueuse/core'
 
 const UBadge = resolveComponent('UBadge')
 const UAvatar = resolveComponent('UAvatar')
 
 const selectedTypes = ref<CelestialBodyType[]>(['Moon', 'Planet'])
+
+const search = ref('')
+const debouncedSearch = refDebounced(search, 300)
 
 const page = ref(1)
 const pageSize = ref(15)
@@ -20,10 +24,11 @@ const {
 } = await useFetch('/api/celestial-bodies', {
   query: {
     types: selectedTypes,
+    search: debouncedSearch,
     page,
     pageSize
   },
-  watch: [selectedTypes, page, pageSize]
+  watch: [selectedTypes, debouncedSearch, page, pageSize]
 })
 
 const bodies = computed(() => bodiesResult.value?.data ?? [])
@@ -131,6 +136,10 @@ const totalCount = computed(() => {
   return sum(Object.values(count.value))
 })
 
+watch([debouncedSearch, selectedTypes], () => {
+  page.value = 1
+})
+
 const onClickType = (type: CelestialBodyType) => {
   if (selectedTypes.value.includes(type)) {
     selectedTypes.value = selectedTypes.value.filter(t => t !== type)
@@ -158,6 +167,14 @@ const onClickType = (type: CelestialBodyType) => {
     <UPageBody
       :ui="{ base: 'mt-5 space-y-5 pb-5' }"
     >
+      <UInput
+        v-model="search"
+        type="search"
+        class="sm:min-w-100"
+        placeholder="Rechercher..."
+        clear
+      />
+
       <div class="flex flex-row gap-2">
         <template v-if="countLoading">
           <USkeleton
@@ -187,7 +204,7 @@ const onClickType = (type: CelestialBodyType) => {
       </div>
 
       <!-- TODO sorting -->
-      <!-- TODO rajouter une colonne image -->
+
       <UTable
         :data="bodies"
         :columns
