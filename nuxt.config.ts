@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/test-utils',
     '@nuxthub/core',
-    '@nuxt/image'
+    '@nuxt/image',
+    '@nuxtjs/i18n'
   ],
 
   devtools: {
@@ -65,5 +66,28 @@ export default defineNuxtConfig({
         braceStyle: '1tbs'
       }
     }
+  },
+
+  i18n: {
+    defaultLocale: 'fr',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root'
+    },
+    locales: [
+      {
+        code: 'en',
+        language: 'en-US',
+        name: 'English',
+        file: 'en.json'
+      },
+      {
+        code: 'fr',
+        language: 'fr-FR',
+        name: 'Français',
+        file: 'fr.json'
+      }
+    ]
   }
 })
