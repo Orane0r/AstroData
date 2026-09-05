@@ -13,12 +13,12 @@ const emit = defineEmits<{ retry: [] }>()
 <template>
   <UEmpty
     v-if="status === 'error'"
-    :title="`Erreur ${error?.statusCode ?? ''}`"
-    :description="error?.statusMessage ?? 'Impossible de charger les données.'"
+    :title="$t('state.error_code', { code: error?.statusCode ?? '' })"
+    :description="error?.statusMessage ?? $t('state.error_message')"
   >
     <template #actions>
       <UButton
-        label="Réessayer"
+        :label="$t('state.retry')"
         icon="i-solar-refresh-outline"
         @click="emit('retry')"
       />
@@ -28,7 +28,7 @@ const emit = defineEmits<{ retry: [] }>()
   <UEmpty
     v-else-if="status != 'pending'"
     icon="i-solar-inbox-outline"
-    title="Aucune donnée"
+    :title="$t('state.no_data')"
   />
 
   <div v-else />

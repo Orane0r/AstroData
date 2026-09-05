@@ -6,6 +6,8 @@ import { refDebounced } from '@vueuse/core'
 const UBadge = resolveComponent('UBadge')
 const UAvatar = resolveComponent('UAvatar')
 
+const { t } = useI18n()
+
 const selectedTypes = ref<CelestialBodyType[]>(['Moon', 'Planet'])
 
 const search = ref('')
@@ -60,7 +62,7 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     accessorKey: 'name',
-    header: 'Nom',
+    header: t('catalog.columns.name'),
     cell: ({ getValue }) => {
       const name = getValue()
       return name || '–'
@@ -68,7 +70,7 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     accessorKey: 'type',
-    header: 'Type',
+    header: t('catalog.columns.type'),
     cell: ({ row }) => {
       const type = row.getValue('type')
       const config = BODY_TYPE_CONFIG[type as keyof typeof BODY_TYPE_CONFIG]
@@ -84,7 +86,7 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     accessorKey: 'meanRadius',
-    header: 'Taille',
+    header: t('catalog.columns.size'),
     cell: ({ row }) => {
       const meanRadius = row.getValue('meanRadius')
       return meanRadius ? `${meanRadius} km` : '–'
@@ -97,7 +99,7 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     id: 'volume',
-    header: 'Volume',
+    header: t('catalog.columns.volume'),
     accessorFn: (row) => {
       if (row.volumeValue == null || row.volumeExponent == null) return null
       return row.volumeValue * 10 ** row.volumeExponent
@@ -114,7 +116,7 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     id: 'mass',
-    header: 'Masse',
+    header: t('catalog.columns.mass'),
     accessorFn: (row) => {
       if (row.massValue == null || row.massExponent == null) return null
       return row.massValue * 10 ** row.massExponent
@@ -152,14 +154,14 @@ const onClickType = (type: CelestialBodyType) => {
 <template>
   <UPage>
     <UPageHeader
-      title="Catalogue"
+      :title="$t('catalog.title')"
     >
       <template #description>
         <template v-if="countLoading">
           <USkeleton class="h-6 w-150" />
         </template>
         <template v-else>
-          {{ `${totalCount} objets · filtrez, triez, explorez` }}
+          {{ $t('catalog.description', { count: totalCount }) }}
         </template>
       </template>
     </UPageHeader>
@@ -171,7 +173,7 @@ const onClickType = (type: CelestialBodyType) => {
         v-model="search"
         type="search"
         class="sm:min-w-100"
-        placeholder="Rechercher..."
+        :placeholder="$t('catalog.search_placeholder')"
         clear
       />
 

@@ -88,6 +88,9 @@ export default defineNuxtConfig({
         name: 'Français',
         file: 'fr.json'
       }
-    ]
+    ],
+    experimental: {
+      typedOptionsAndMessages: 'default'
+    }
   }
 })

@@ -1,3 +1,38 @@
 {
-  "welcome": "Welcome to AstroData"
+  "hero": {
+    "title": "The cosmos,",
+    "title2": "in data.",
+    "subtitle": "Explore and compare objects in our universe.",
+    "get_started": "Get started"
+  },
+
+  "menus": {
+    "catalog": "Catalog",
+    "charts": "Charts",
+    "comparator": "Comparator"
+  },
+
+  "catalog": {
+    "title": "Catalog",
+    "description": "{count} objects · filter, sort, explore",
+    "search_placeholder": "Search...",
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "size": "Size",
+      "volume": "Volume",
+      "mass": "Mass"
+    }
+  },
+
+  "state": {
+    "no_data": "No data",
+    "error_code": "Error {code}",
+    "error_message": "Unable to load the data.",
+    "retry": "Retry"
+  },
+
+  "footer": {
+    "developed_by": "Developed by Orane Orveillon"
+  }
 }

@@ -13,6 +13,8 @@ useHead({
   }
 })
 
+const { t } = useI18n()
+
 const title = 'AstroData'
 const description = 'A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours.'
 
@@ -27,15 +29,15 @@ useSeoMeta({
 
 const items = ref<NavigationMenuItem[]>([
   {
-    label: 'Catalogue',
+    label: t('menus.catalog'),
     to: '/catalog'
   },
   {
-    label: 'Graphiques',
+    label: t('menus.charts'),
     to: '/graphs'
   },
   {
-    label: 'Comparateur',
+    label: t('menus.comparator'),
     to: '/comparator'
   }
 ])
@@ -78,7 +80,7 @@ const items = ref<NavigationMenuItem[]>([
     <UFooter>
       <template #left>
         <p class="text-sm text-muted">
-          Developed by Orane Orveillon
+          {{ $t('footer.developed_by') }}
         </p>
       </template>
 
