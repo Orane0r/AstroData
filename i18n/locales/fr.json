@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "title": "Le cosmos,",
+    "title2": "en données.",
+    "subtitle": "Explorez et comparez les objets de notre univers.",
+    "get_started": "Commencer"
+  },
+
+  "menus": {
+    "catalog": "Catalogue",
+    "charts": "Graphiques",
+    "comparator": "Comparateur"
+  },
+
+  "catalog": {
+    "title": "Catalogue",
+    "description": "{count} objets · filtrez, triez, explorez",
+    "search_placeholder": "Rechercher...",
+    "columns": {
+      "name": "Nom",
+      "type": "Type",
+      "size": "Taille",
+      "volume": "Volume",
+      "mass": "Masse"
+    }
+  },
+
+  "state": {
+    "no_data": "Aucune donnée",
+    "error_code": "Erreur {code}",
+    "error_message": "Impossible de charger les données.",
+    "retry": "Ressayer"
+  },
+
+  "footer": {
+    "developed_by": "Développé par Orane Orveillon"
+  }
+}

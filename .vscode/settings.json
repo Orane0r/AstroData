@@ -1,6 +1,6 @@
 {
-  "cSpell.words": [
-    "decouvreur",
-    "semimajor"
-  ]
+  "cSpell.words": ["decouvreur", "semimajor"],
+  "chat.tools.terminal.autoApprove": {
+    "pnpm": true
+  }
 }
