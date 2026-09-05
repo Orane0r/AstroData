@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { TableColumn } from '@nuxt/ui'
+import type { TableColumn, TableRow } from '@nuxt/ui'
 import { sum } from 'lodash'
 import { refDebounced } from '@vueuse/core'
 
@@ -149,6 +149,10 @@ const onClickType = (type: CelestialBodyType) => {
     selectedTypes.value.push(type)
   }
 }
+
+const onClickRow = (row: TableRow<CelestialBody>) => {
+  navigateTo(`/catalog/${row.id}`)
+}
 </script>
 
 <template>
@@ -212,6 +216,7 @@ const onClickType = (type: CelestialBodyType) => {
         :columns
         :loading="bodiesLoading"
         sticky
+        @select="(_, row) => onClickRow(row)"
       >
         <template #empty>
           <EmptyState

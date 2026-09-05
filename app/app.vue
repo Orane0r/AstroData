@@ -34,7 +34,7 @@ const items = ref<NavigationMenuItem[]>([
   },
   {
     label: t('menus.charts'),
-    to: '/graphs'
+    to: '/charts'
   },
   {
     label: t('menus.comparator'),
