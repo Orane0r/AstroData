@@ -167,6 +167,14 @@ const onClickType = (type: CelestialBodyType) => {
     <UPageBody
       :ui="{ base: 'mt-5 space-y-5 pb-5' }"
     >
+      <UInput
+        v-model="search"
+        type="search"
+        class="sm:min-w-100"
+        placeholder="Rechercher..."
+        clear
+      />
+
       <div class="flex flex-row gap-2">
         <template v-if="countLoading">
           <USkeleton
@@ -196,14 +204,6 @@ const onClickType = (type: CelestialBodyType) => {
       </div>
 
       <!-- TODO sorting -->
-
-      <UInput
-        v-model="search"
-        type="search"
-        class="max-w-sm min-w-[12ch]"
-        placeholder="Rechercher..."
-        clear
-      />
 
       <UTable
         :data="bodies"
