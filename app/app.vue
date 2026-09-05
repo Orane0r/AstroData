@@ -72,7 +72,9 @@ const items = ref<NavigationMenuItem[]>([
     </UHeader>
 
     <UMain>
-      <NuxtPage />
+      <UContainer class="max-w-350">
+        <NuxtPage />
+      </UContainer>
     </UMain>
 
     <USeparator />
