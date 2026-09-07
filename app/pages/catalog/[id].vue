@@ -68,27 +68,24 @@ const items = ref<BreadcrumbItem[]>([
       <div class="flex flex-row gap-4">
         <UCard
           class="flex-1"
+          :ui="{ body: 'py-2 sm:py-2' }"
         >
           <template #header>
             <h2 class="text-sm font-semibold tracking-wide text-dimmed">
               CARACTÉRISTIQUES
             </h2>
           </template>
-          <!-- TODo enlever marge y -->
-          <!-- TODO voir si je peux mettre mieux que divide-white/10 -->
-          <div class="divide-y divide-white/10">
+          <div class="divide-y divide-default">
             <div
               v-for="characteristic in characteristics"
               :key="characteristic.label"
-              class="flex items-center gap-3 py-2.5"
+              class="flex items-center gap-3 py-3"
             >
-              <!-- TODO voir si je peux mettre mieux que que bg blue et text-blue -->
-              <div class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-950/60 text-blue-300">
-                <UIcon
-                  :name="characteristic.icon"
-                  class="size-4"
-                />
-              </div>
+              <UAvatar
+                class="rounded-lg"
+                color="secondary"
+                :icon="characteristic.icon"
+              />
               <span class="text-sm text-muted">
                 {{ characteristic.label }}
               </span>
