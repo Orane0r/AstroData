@@ -151,7 +151,8 @@ const onClickType = (type: CelestialBodyType) => {
 }
 
 const onClickRow = (row: TableRow<CelestialBody>) => {
-  navigateTo(`/catalog/${row.id}`)
+  const bodyId = bodiesResult.value?.data[Number.parseInt(row.id)]!.id
+  navigateTo(`/catalog/${bodyId}`)
 }
 </script>
 

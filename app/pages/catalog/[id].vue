@@ -3,21 +3,16 @@ import type { BreadcrumbItem } from '@nuxt/ui'
 
 const route = useRoute()
 
+const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
+
 const items = ref<BreadcrumbItem[]>([
   {
-    label: 'Docs',
-    icon: 'i-lucide-book-open',
-    to: '/docs'
+    label: 'Catalog',
+    to: '/catalog'
   },
   {
-    label: 'Components',
-    icon: 'i-lucide-box',
-    to: '/docs/components'
-  },
-  {
-    label: 'Breadcrumb',
-    icon: 'i-lucide-link',
-    to: '/docs/components/breadcrumb'
+    label: body.value?.name,
+    active: true
   }
 ])
 </script>
@@ -26,12 +21,12 @@ const items = ref<BreadcrumbItem[]>([
   <UPage>
     <UPageBody>
       <UBreadcrumb :items="items" />
-      {{ route }}
       <div class="flex flex-row gap-4">
         <div class="flex-1 min-h-50">
-          <!-- TODO bouton 3d -->
+          <!-- TODO bouton 3d + vue 3d -->
           <NuxtImg
-            src="https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+            v-if="body?.imageUrl"
+            :src="body.imageUrl"
             alt="Moon"
             fit="contain"
             class="rounded-xl"
