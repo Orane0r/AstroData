@@ -2,12 +2,13 @@
 import type { BreadcrumbItem } from '@nuxt/ui'
 
 const route = useRoute()
+const { t } = useI18n()
 
 const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
 
 const items = ref<BreadcrumbItem[]>([
   {
-    label: 'Catalog',
+    label: t('menus.catalog'),
     to: '/catalog'
   },
   {
@@ -27,7 +28,7 @@ const items = ref<BreadcrumbItem[]>([
           <NuxtImg
             v-if="body?.imageUrl"
             :src="body.imageUrl"
-            alt="Moon"
+            :alt="body.name"
             fit="contain"
             class="rounded-xl"
           />
