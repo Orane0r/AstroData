@@ -19,16 +19,15 @@ const characteristics = computed(() => {
     return []
   }
 
-  // TODO icones solar
   return [
-    { label: 'Rayon moyen', value: `${formatNumber(body.value.meanRadius)} km`, icon: 'i-lucide-circle-dashed' },
-    { label: 'Masse', value: body.value.massValue && body.value.massExponent ? `${formatNumber(body.value.massValue)} × 10${toSuperscript(body.value.massExponent)} kg` : '—', icon: 'i-lucide-weight' },
-    { label: 'Densité', value: `${formatNumber(body.value.density)} g/cm³`, icon: 'i-lucide-box' },
-    { label: 'Gravité', value: `${formatNumber(body.value.gravity)} m/s²`, icon: 'i-lucide-gauge' },
-    { label: 'Température moy.', value: `${formatNumber(body.value.averageTemperature - 273.15)} °C`, icon: 'i-lucide-thermometer' },
-    { label: 'Période orbitale', value: `${formatNumber(body.value.sideralOrbit / 365.25, 1)} ans`, icon: 'i-lucide-orbit' },
-    { label: 'Rotation sidérale', value: `${formatNumber(body.value.sideralRotation, 1)} h`, icon: 'i-lucide-refresh-cw' },
-    { label: 'Distance au Soleil', value: `${formatNumber(body.value.semimajorAxis)} km`, icon: 'i-lucide-sun' }
+    { label: 'Rayon moyen', value: `${formatNumber(body.value.meanRadius)} km`, icon: 'i-solar-radar-outline' },
+    { label: 'Masse', value: body.value.massValue && body.value.massExponent ? `${formatNumber(body.value.massValue)} × 10${toSuperscript(body.value.massExponent)} kg` : '—', icon: 'i-solar-dumbbell-large-minimalistic-outline' },
+    { label: 'Densité', value: `${formatNumber(body.value.density)} g/cm³`, icon: 'i-solar-box-minimalistic-outline' },
+    { label: 'Gravité', value: `${formatNumber(body.value.gravity)} m/s²`, icon: 'i-solar-speedometer-max-outline' },
+    { label: 'Température moy.', value: `${formatNumber(body.value.averageTemperature - 273.15)} °C`, icon: 'i-solar-temperature-outline' },
+    { label: 'Période orbitale', value: `${formatNumber(body.value.sideralOrbit / 365.25, 1)} ans`, icon: 'i-solar-round-graph-outline' },
+    { label: 'Rotation sidérale', value: `${formatNumber(body.value.sideralRotation, 1)} h`, icon: 'i-solar-planet-2-outline' },
+    { label: 'Distance au Soleil', value: `${formatNumber(body.value.semimajorAxis)} km`, icon: 'i-solar-sun-outline' }
   ]
 })
 
