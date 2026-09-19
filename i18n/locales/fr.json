@@ -38,6 +38,16 @@
     "distance_from_sun": "Distance au Soleil"
   },
 
+  "units": {
+    "km": "km",
+    "kg": "kg",
+    "g/cm3": "g/cm³",
+    "m/s²": "m/s²",
+    "C": "°C",
+    "years": "ans",
+    "h": "h"
+  },
+
   "state": {
     "no_data": "Aucune donnée",
     "error_code": "Erreur {code}",

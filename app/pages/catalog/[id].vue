@@ -27,7 +27,7 @@ const characteristics = computed<Characteristic[]>(() => {
   return [
     {
       label: t('attributes.mean_radius'),
-      value: `${formatNumber(body.value.meanRadius)} km`,
+      value: `${formatNumber(body.value.meanRadius)} ${t('units.km')}`,
       icon: 'i-solar-radar-outline'
     },
     {
@@ -35,37 +35,41 @@ const characteristics = computed<Characteristic[]>(() => {
       icon: 'i-solar-dumbbell-large-minimalistic-outline',
       value: '—',
       scientific: body.value.massValue && body.value.massExponent
-        ? { value: body.value.massValue, exponent: body.value.massExponent, unit: 'kg' }
+        ? {
+            value: body.value.massValue,
+            exponent: body.value.massExponent,
+            unit: t('units.kg')
+          }
         : undefined
     },
     {
       label: t('attributes.density'),
-      value: `${formatNumber(body.value.density)} g/cm³`,
+      value: `${formatNumber(body.value.density)} ${t('units.g/cm3')}`,
       icon: 'i-solar-box-minimalistic-outline'
     },
     {
       label: t('attributes.gravity'),
-      value: `${formatNumber(body.value.gravity)} m/s²`,
+      value: `${formatNumber(body.value.gravity)} ${t('units.m/s²')}`,
       icon: 'i-solar-speedometer-max-outline'
     },
     {
       label: t('attributes.average_temperature'),
-      value: `${formatNumber(body.value.averageTemperature - 273.15)} °C`,
+      value: `${formatNumber(body.value.averageTemperature - 273.15)} ${t('units.C')}`,
       icon: 'i-solar-temperature-outline'
     },
     {
       label: t('attributes.sideral_orbit'),
-      value: `${formatNumber(body.value.sideralOrbit / 365.25, 1)} ans`,
+      value: `${formatNumber(body.value.sideralOrbit / 365.25, 1)} ${t('units.years')}`,
       icon: 'i-solar-round-graph-outline'
     },
     {
       label: t('attributes.sideral_rotation'),
-      value: `${formatNumber(body.value.sideralRotation, 1)} h`,
+      value: `${formatNumber(body.value.sideralRotation, 1)} ${t('units.h')}`,
       icon: 'i-solar-planet-2-outline'
     },
     {
       label: t('attributes.distance_from_sun'),
-      value: `${formatNumber(body.value.semimajorAxis)} km`,
+      value: `${formatNumber(body.value.semimajorAxis)} ${t('units.km')}`,
       icon: 'i-solar-sun-outline'
     }
   ]
