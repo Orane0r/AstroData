@@ -12,7 +12,11 @@ interface Characteristic {
   label: string
   icon: string
   value?: string
-  scientific?: { value: number, exponent: number, unit: string }
+  scientific?: {
+    value: number
+    exponent: number
+    unit: string
+  }
 }
 
 const characteristics = computed<Characteristic[]>(() => {
