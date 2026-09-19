@@ -8,23 +8,62 @@ const { t } = useI18n()
 
 const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
 
-// TODO
-const toSuperscript = (value: number) => String(value).replace(/[0-9-]/g, character => '⁰¹²³⁴⁵⁶⁷⁸⁹⁻'[character === '-' ? 10 : Number(character)])
+interface Characteristic {
+  label: string
+  icon: string
+  value?: string
+  scientific?: { value: number, exponent: number, unit: string }
+}
 
-const characteristics = computed(() => {
+const characteristics = computed<Characteristic[]>(() => {
   if (!body.value) {
     return []
   }
 
   return [
-    { label: t('attributes.mean_radius'), value: `${formatNumber(body.value.meanRadius)} km`, icon: 'i-solar-radar-outline' },
-    { label: t('attributes.mass'), value: body.value.massValue && body.value.massExponent ? `${formatNumber(body.value.massValue)} × 10${toSuperscript(body.value.massExponent)} kg` : '—', icon: 'i-solar-dumbbell-large-minimalistic-outline' },
-    { label: t('attributes.density'), value: `${formatNumber(body.value.density)} g/cm³`, icon: 'i-solar-box-minimalistic-outline' },
-    { label: t('attributes.gravity'), value: `${formatNumber(body.value.gravity)} m/s²`, icon: 'i-solar-speedometer-max-outline' },
-    { label: t('attributes.average_temperature'), value: `${formatNumber(body.value.averageTemperature - 273.15)} °C`, icon: 'i-solar-temperature-outline' },
-    { label: t('attributes.orbital_period'), value: `${formatNumber(body.value.sideralOrbit / 365.25, 1)} ans`, icon: 'i-solar-round-graph-outline' },
-    { label: t('attributes.sideral_rotation'), value: `${formatNumber(body.value.sideralRotation, 1)} h`, icon: 'i-solar-planet-2-outline' },
-    { label: t('attributes.distance_from_sun'), value: `${formatNumber(body.value.semimajorAxis)} km`, icon: 'i-solar-sun-outline' }
+    {
+      label: t('attributes.mean_radius'),
+      value: `${formatNumber(body.value.meanRadius)} km`,
+      icon: 'i-solar-radar-outline'
+    },
+    {
+      label: t('attributes.mass'),
+      icon: 'i-solar-dumbbell-large-minimalistic-outline',
+      value: '—',
+      scientific: body.value.massValue && body.value.massExponent
+        ? { value: body.value.massValue, exponent: body.value.massExponent, unit: 'kg' }
+        : undefined
+    },
+    {
+      label: t('attributes.density'),
+      value: `${formatNumber(body.value.density)} g/cm³`,
+      icon: 'i-solar-box-minimalistic-outline'
+    },
+    {
+      label: t('attributes.gravity'),
+      value: `${formatNumber(body.value.gravity)} m/s²`,
+      icon: 'i-solar-speedometer-max-outline'
+    },
+    {
+      label: t('attributes.average_temperature'),
+      value: `${formatNumber(body.value.averageTemperature - 273.15)} °C`,
+      icon: 'i-solar-temperature-outline'
+    },
+    {
+      label: t('attributes.sideral_orbit'),
+      value: `${formatNumber(body.value.sideralOrbit / 365.25, 1)} ans`,
+      icon: 'i-solar-round-graph-outline'
+    },
+    {
+      label: t('attributes.sideral_rotation'),
+      value: `${formatNumber(body.value.sideralRotation, 1)} h`,
+      icon: 'i-solar-planet-2-outline'
+    },
+    {
+      label: t('attributes.distance_from_sun'),
+      value: `${formatNumber(body.value.semimajorAxis)} km`,
+      icon: 'i-solar-sun-outline'
+    }
   ]
 })
 
@@ -67,8 +106,8 @@ const items = ref<BreadcrumbItem[]>([
           :ui="{ body: 'py-2 sm:py-2' }"
         >
           <template #header>
-            <h2 class="text-sm font-semibold tracking-wide text-dimmed">
-              CARACTÉRISTIQUES
+            <h2 class="font-semibold tracking-wide text-dimmed uppercase">
+              {{ $t('body_sheet.characteristics') }}
             </h2>
           </template>
           <div class="divide-y divide-default">
@@ -86,16 +125,26 @@ const items = ref<BreadcrumbItem[]>([
                 {{ characteristic.label }}
               </span>
               <span class="ml-auto text-right text-sm font-semibold tabular-nums text-highlighted">
-                {{ characteristic.value }}
+                <ScientificNotation
+                  v-if="characteristic.scientific"
+                  v-bind="characteristic.scientific"
+                />
+                <template v-else>
+                  {{ characteristic.value }}
+                </template>
               </span>
             </div>
           </div>
         </UCard>
         <UCard
           class="flex-1"
-          :title="'Profil'.toLocaleUpperCase()"
-          description="Profil"
-        />
+        >
+          <template #header>
+            <h2 class="font-semibold tracking-wide text-dimmed uppercase">
+              {{ $t('body_sheet.profile') }}
+            </h2>
+          </template>
+        </UCard>
       </div>
       <div>cadre galerie</div>
       <div>objets liés (à voir)</div>
