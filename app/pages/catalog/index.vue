@@ -62,7 +62,7 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     accessorKey: 'name',
-    header: t('catalog.columns.name'),
+    header: t('attributes.name'),
     cell: ({ getValue }) => {
       const name = getValue()
       return name || '–'
@@ -70,7 +70,7 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     accessorKey: 'type',
-    header: t('catalog.columns.type'),
+    header: t('attributes.type'),
     cell: ({ row }) => {
       const type = row.getValue('type')
       const config = BODY_TYPE_CONFIG[type as keyof typeof BODY_TYPE_CONFIG]
@@ -86,7 +86,7 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     accessorKey: 'meanRadius',
-    header: t('catalog.columns.size'),
+    header: t('attributes.size'),
     cell: ({ row }) => {
       const meanRadius = row.getValue('meanRadius')
       return meanRadius ? `${meanRadius} km` : '–'
@@ -99,7 +99,7 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     id: 'volume',
-    header: t('catalog.columns.volume'),
+    header: t('attributes.volume'),
     accessorFn: (row) => {
       if (row.volumeValue == null || row.volumeExponent == null) return null
       return row.volumeValue * 10 ** row.volumeExponent
@@ -116,7 +116,7 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     id: 'mass',
-    header: t('catalog.columns.mass'),
+    header: t('attributes.mass'),
     accessorFn: (row) => {
       if (row.massValue == null || row.massExponent == null) return null
       return row.massValue * 10 ** row.massExponent

@@ -20,14 +20,14 @@ const characteristics = computed(() => {
   }
 
   return [
-    { label: 'Rayon moyen', value: `${formatNumber(body.value.meanRadius)} km`, icon: 'i-solar-radar-outline' },
-    { label: 'Masse', value: body.value.massValue && body.value.massExponent ? `${formatNumber(body.value.massValue)} × 10${toSuperscript(body.value.massExponent)} kg` : '—', icon: 'i-solar-dumbbell-large-minimalistic-outline' },
-    { label: 'Densité', value: `${formatNumber(body.value.density)} g/cm³`, icon: 'i-solar-box-minimalistic-outline' },
-    { label: 'Gravité', value: `${formatNumber(body.value.gravity)} m/s²`, icon: 'i-solar-speedometer-max-outline' },
-    { label: 'Température moy.', value: `${formatNumber(body.value.averageTemperature - 273.15)} °C`, icon: 'i-solar-temperature-outline' },
-    { label: 'Période orbitale', value: `${formatNumber(body.value.sideralOrbit / 365.25, 1)} ans`, icon: 'i-solar-round-graph-outline' },
-    { label: 'Rotation sidérale', value: `${formatNumber(body.value.sideralRotation, 1)} h`, icon: 'i-solar-planet-2-outline' },
-    { label: 'Distance au Soleil', value: `${formatNumber(body.value.semimajorAxis)} km`, icon: 'i-solar-sun-outline' }
+    { label: t('attributes.mean_radius'), value: `${formatNumber(body.value.meanRadius)} km`, icon: 'i-solar-radar-outline' },
+    { label: t('attributes.mass'), value: body.value.massValue && body.value.massExponent ? `${formatNumber(body.value.massValue)} × 10${toSuperscript(body.value.massExponent)} kg` : '—', icon: 'i-solar-dumbbell-large-minimalistic-outline' },
+    { label: t('attributes.density'), value: `${formatNumber(body.value.density)} g/cm³`, icon: 'i-solar-box-minimalistic-outline' },
+    { label: t('attributes.gravity'), value: `${formatNumber(body.value.gravity)} m/s²`, icon: 'i-solar-speedometer-max-outline' },
+    { label: t('attributes.average_temperature'), value: `${formatNumber(body.value.averageTemperature - 273.15)} °C`, icon: 'i-solar-temperature-outline' },
+    { label: t('attributes.orbital_period'), value: `${formatNumber(body.value.sideralOrbit / 365.25, 1)} ans`, icon: 'i-solar-round-graph-outline' },
+    { label: t('attributes.sideral_rotation'), value: `${formatNumber(body.value.sideralRotation, 1)} h`, icon: 'i-solar-planet-2-outline' },
+    { label: t('attributes.distance_from_sun'), value: `${formatNumber(body.value.semimajorAxis)} km`, icon: 'i-solar-sun-outline' }
   ]
 })
 

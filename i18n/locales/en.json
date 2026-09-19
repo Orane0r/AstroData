@@ -15,14 +15,27 @@
   "catalog": {
     "title": "Catalog",
     "description": "{count} objects · filter, sort, explore",
-    "search_placeholder": "Search...",
-    "columns": {
-      "name": "Name",
-      "type": "Type",
-      "size": "Size",
-      "volume": "Volume",
-      "mass": "Mass"
-    }
+    "search_placeholder": "Search..."
+  },
+
+  "body_sheet": {
+    "characteristics": "Characteristics",
+    "profile": "Profile"
+  },
+
+  "attributes": {
+    "name": "Name",
+    "type": "Type",
+    "size": "Size",
+    "volume": "Volume",
+    "mean_radius": "Mean Radius",
+    "mass": "Mass",
+    "density": "Density",
+    "gravity": "Gravity",
+    "average_temperature": "Average Temperature",
+    "sideral_orbit": "Sideral Orbit",
+    "sideral_rotation": "Sideral Rotation",
+    "distance_from_sun": "Distance from Sun"
   },
 
   "state": {
