@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import type { BreadcrumbItem } from '@nuxt/ui'
 
+import { formatNumber } from '~/utils/format-number'
+
 const route = useRoute()
 const { t } = useI18n()
 
 const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
-
-// TODO
-const formatNumber = (value: number, maximumFractionDigits = 2) => new Intl.NumberFormat('fr-FR', {
-  maximumFractionDigits
-}).format(value)
 
 // TODO
 const toSuperscript = (value: number) => String(value).replace(/[0-9-]/g, character => '⁰¹²³⁴⁵⁶⁷⁸⁹⁻'[character === '-' ? 10 : Number(character)])

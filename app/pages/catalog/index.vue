@@ -97,6 +97,7 @@ const columns: TableColumn<CelestialBody>[] = [
       }
     }
   },
+  // TODO meilleurs notation volume et masse
   {
     id: 'volume',
     header: t('attributes.volume'),
