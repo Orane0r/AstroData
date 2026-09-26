@@ -20,7 +20,8 @@
 
   "body_sheet": {
     "characteristics": "Characteristics",
-    "profile": "Profile"
+    "profile": "Profile",
+    "enlarged_view": "Enlarged View"
   },
 
   "attributes": {

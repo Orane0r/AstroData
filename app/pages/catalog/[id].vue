@@ -6,6 +6,8 @@ import { formatNumber } from '~/utils/format-number'
 const route = useRoute()
 const { t } = useI18n()
 
+const isDialogOpened = ref(false)
+
 const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
 
 interface Characteristic {
@@ -95,13 +97,29 @@ const items = ref<BreadcrumbItem[]>([
         <div class="flex-1 min-h-50">
           <!-- TODO bouton 3d + vue 3d -->
           <!-- TODO fenêtre agrandie au clic -->
-          <NuxtImg
-            v-if="body?.imageUrl"
-            :src="body.imageUrl"
-            :alt="body.name"
-            fit="contain"
-            class="rounded-xl"
-          />
+          <UModal
+            v-model:open="isDialogOpened"
+            :title="$t('body_sheet.enlarged_view')"
+          >
+            <NuxtImg
+              v-if="body?.imageUrl"
+              :src="body.imageUrl"
+              :alt="body.name"
+              fit="contain"
+              class="rounded-xl cursor-pointer"
+              @click="isDialogOpened = true"
+            />
+
+            <template #body>
+              <NuxtImg
+                v-if="body?.imageUrl"
+                :src="body.imageUrl"
+                :alt="body.name"
+                fit="contain"
+                class="rounded-xl"
+              />
+            </template>
+          </UModal>
         </div>
         <div class="flex-2 min-h-50">
           <div>nom</div>
