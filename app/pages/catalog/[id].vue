@@ -96,7 +96,6 @@ const items = ref<BreadcrumbItem[]>([
       <div class="flex flex-row gap-4">
         <div class="flex-1 min-h-50">
           <!-- TODO bouton 3d + vue 3d -->
-          <!-- TODO fenêtre agrandie au clic -->
           <UModal
             v-model:open="isDialogOpened"
             :title="$t('body_sheet.enlarged_view')"
@@ -111,6 +110,7 @@ const items = ref<BreadcrumbItem[]>([
             />
 
             <template #body>
+              <!-- TODO zoom sur l'image -->
               <NuxtImg
                 v-if="body?.imageUrl"
                 :src="body.imageUrl"
