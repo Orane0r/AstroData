@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import type { TableColumn, TableRow } from '@nuxt/ui'
-import { sum } from 'lodash'
+import { round, sum } from 'lodash'
 import { refDebounced } from '@vueuse/core'
 
 const UBadge = resolveComponent('UBadge')
 const UAvatar = resolveComponent('UAvatar')
+const ScientificNotation = resolveComponent('ScientificNotation')
 
 const { t } = useI18n()
 
@@ -89,7 +90,7 @@ const columns: TableColumn<CelestialBody>[] = [
     header: t('attributes.size'),
     cell: ({ row }) => {
       const meanRadius = row.getValue('meanRadius')
-      return meanRadius ? `${meanRadius} km` : '–'
+      return meanRadius ? `${round(meanRadius as number)} ${t('units.km')}` : '–'
     },
     meta: {
       class: {
@@ -97,7 +98,6 @@ const columns: TableColumn<CelestialBody>[] = [
       }
     }
   },
-  // TODO meilleurs notation volume et masse
   {
     id: 'volume',
     header: t('attributes.volume'),
@@ -105,9 +105,14 @@ const columns: TableColumn<CelestialBody>[] = [
       if (row.volumeValue == null || row.volumeExponent == null) return null
       return row.volumeValue * 10 ** row.volumeExponent
     },
-    cell: ({ getValue }) => {
-      const volume = getValue<number | null>()
-      return volume === null ? '–' : `${volume.toExponential(2)} m³`
+    cell: ({ row }) => {
+      const original = row.original
+      if (original.volumeValue == null || original.volumeExponent == null) return '–'
+      return h(ScientificNotation, {
+        value: original.volumeValue,
+        exponent: original.volumeExponent,
+        unit: t('units.m3')
+      })
     },
     meta: {
       class: {
@@ -122,9 +127,14 @@ const columns: TableColumn<CelestialBody>[] = [
       if (row.massValue == null || row.massExponent == null) return null
       return row.massValue * 10 ** row.massExponent
     },
-    cell: ({ getValue }) => {
-      const mass = getValue<number | null>()
-      return mass === null ? '–' : `${mass.toExponential(2)} kg`
+    cell: ({ row }) => {
+      const original = row.original
+      if (original.massValue == null || original.massExponent == null) return '–'
+      return h(ScientificNotation, {
+        value: original.massValue,
+        exponent: original.massExponent,
+        unit: t('units.kg')
+      })
     },
     meta: {
       class: {
