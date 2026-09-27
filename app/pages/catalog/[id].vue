@@ -3,10 +3,17 @@ import type { BreadcrumbItem } from '@nuxt/ui'
 
 import { formatNumber } from '~/utils/format-number'
 
+interface PanzoomImage extends HTMLImageElement {
+  panzoom?: {
+    zoomWithWheel: (event: WheelEvent) => void
+  }
+}
+
 const route = useRoute()
 const { t } = useI18n()
 
 const isDialogOpened = ref(false)
+const zoom = ref<PanzoomImage | null>(null)
 
 const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
 
@@ -87,6 +94,17 @@ const items = ref<BreadcrumbItem[]>([
     active: true
   }
 ])
+
+function handleImageWheel(event: WheelEvent) {
+  zoom.value?.panzoom?.zoomWithWheel(event)
+}
+
+function handlePanzoomChange(event: Event) {
+  const { scale } = (event as CustomEvent<{ scale: number }>).detail
+  if (zoom.value) {
+    zoom.value.style.cursor = scale > 1.001 ? 'grab' : 'zoom-in'
+  }
+}
 </script>
 
 <template>
@@ -98,7 +116,8 @@ const items = ref<BreadcrumbItem[]>([
           <!-- TODO bouton 3d + vue 3d -->
           <UModal
             v-model:open="isDialogOpened"
-            :title="$t('body_sheet.enlarged_view')"
+            :title="$t('body_sheet.interactive_view')"
+            :ui="{ content: 'sm:max-w-3xl' }"
           >
             <NuxtImg
               v-if="body?.imageUrl"
@@ -110,14 +129,21 @@ const items = ref<BreadcrumbItem[]>([
             />
 
             <template #body>
-              <!-- TODO zoom sur l'image -->
-              <NuxtImg
-                v-if="body?.imageUrl"
-                :src="body.imageUrl"
-                :alt="body.name"
-                fit="contain"
-                class="rounded-xl"
-              />
+              <div
+                class="overflow-hidden rounded-xl"
+                @wheel.prevent="handleImageWheel"
+              >
+                <img
+                  v-if="body?.imageUrl"
+                  ref="zoom"
+                  v-panzoom="{ contain: 'outside', cursor: 'zoom-in' }"
+                  :src="body.imageUrl"
+                  :alt="body.name"
+                  fit="contain"
+                  class="w-full h-auto"
+                  @panzoomchange="handlePanzoomChange"
+                >
+              </div>
             </template>
           </UModal>
         </div>
