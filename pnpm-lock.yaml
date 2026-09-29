@@ -38,6 +38,9 @@ importers:
       '@vueuse/core':
         specifier: ^14.4.0
         version: 14.4.0(vue@3.5.34(typescript@6.0.3))
+      '@wgr-sa/nuxt-panzoom':
+        specifier: ^0.1.2
+        version: 0.1.2(magicast@0.5.3)
       drizzle-kit:
         specifier: ^0.31.10
         version: 0.31.10
@@ -2319,6 +2322,9 @@ packages:
   '@package-json/types@0.0.12':
     resolution: {integrity: sha512-uu43FGU34B5VM9mCNjXCwLaGHYjXdNincqKLaraaCW+7S2+SmiBg1Nv8bPnmschrIfZmfKNY9f3fC376MRrObw==}
 
+  '@panzoom/panzoom@4.6.2':
+    resolution: {integrity: sha512-Zn3B5/hwa6eYIPRSKX0xf2clv8nviTX8AnAU5kU/EugiTDhG41ya2wlBqYrZJYCWQROr/5XkWObZhIkepi89qw==}
+
   '@parcel/watcher-android-arm64@2.5.6':
     resolution: {integrity: sha512-YQxSS34tPF/6ZG7r/Ih9xy+kP/WwediEUsqmtf0cuCV5TPPKw/PQHRhueUo6JdeFJaqV3pyjm0GdYjZotbRt/A==}
     engines: {node: '>= 10.0.0'}
@@ -3708,6 +3714,9 @@ packages:
     resolution: {integrity: sha512-JRgY90Sz8DDtPMsaDflvPMp9xYk69JZAmbuDvAquUVXKr2gEjqtzGNTTthLfckH0BzBqvnu31gb4a8TGLRe79g==}
     peerDependencies:
       vue: ^3.5.0
+
+  '@wgr-sa/nuxt-panzoom@0.1.2':
+    resolution: {integrity: sha512-82lMOXEi7bzh9tJgfMGGXikwOjYzwWW1GB29iRFl6U0xvncoFEjUR3Y9G21L/FbOmZQRiG+FzrVZfz4AOea6Ww==}
 
   abbrev@2.0.0:
     resolution: {integrity: sha512-6/mh1E2u2YgEsCHdY0Yx5oW+61gZU+1vXaoiHHrpKeuRNNgFvS+/jrwHiQhB5apAf5oB7UB7E19ol2R2LKH8hQ==}
@@ -9478,6 +9487,8 @@ snapshots:
 
   '@package-json/types@0.0.12': {}
 
+  '@panzoom/panzoom@4.6.2': {}
+
   '@parcel/watcher-android-arm64@2.5.6':
     optional: true
 
@@ -10724,6 +10735,13 @@ snapshots:
   '@vueuse/shared@14.4.0(vue@3.5.34(typescript@6.0.3))':
     dependencies:
       vue: 3.5.34(typescript@6.0.3)
+
+  '@wgr-sa/nuxt-panzoom@0.1.2(magicast@0.5.3)':
+    dependencies:
+      '@nuxt/kit': 3.21.6(magicast@0.5.3)
+      '@panzoom/panzoom': 4.6.2
+    transitivePeerDependencies:
+      - magicast
 
   abbrev@2.0.0: {}
 

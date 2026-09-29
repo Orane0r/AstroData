@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import type { TableColumn } from '@nuxt/ui'
-import { sum } from 'lodash'
+import type { TableColumn, TableRow } from '@nuxt/ui'
+import { round, sum } from 'lodash'
 import { refDebounced } from '@vueuse/core'
 
 const UBadge = resolveComponent('UBadge')
 const UAvatar = resolveComponent('UAvatar')
+const ScientificNotation = resolveComponent('ScientificNotation')
 
 const { t } = useI18n()
 
@@ -62,7 +63,7 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     accessorKey: 'name',
-    header: t('catalog.columns.name'),
+    header: t('attributes.name'),
     cell: ({ getValue }) => {
       const name = getValue()
       return name || '–'
@@ -70,7 +71,7 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     accessorKey: 'type',
-    header: t('catalog.columns.type'),
+    header: t('attributes.type'),
     cell: ({ row }) => {
       const type = row.getValue('type')
       const config = BODY_TYPE_CONFIG[type as keyof typeof BODY_TYPE_CONFIG]
@@ -86,10 +87,10 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     accessorKey: 'meanRadius',
-    header: t('catalog.columns.size'),
+    header: t('attributes.size'),
     cell: ({ row }) => {
       const meanRadius = row.getValue('meanRadius')
-      return meanRadius ? `${meanRadius} km` : '–'
+      return meanRadius ? `${round(meanRadius as number)} ${t('units.km')}` : '–'
     },
     meta: {
       class: {
@@ -99,14 +100,19 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     id: 'volume',
-    header: t('catalog.columns.volume'),
+    header: t('attributes.volume'),
     accessorFn: (row) => {
       if (row.volumeValue == null || row.volumeExponent == null) return null
       return row.volumeValue * 10 ** row.volumeExponent
     },
-    cell: ({ getValue }) => {
-      const volume = getValue<number | null>()
-      return volume === null ? '–' : `${volume.toExponential(2)} m³`
+    cell: ({ row }) => {
+      const original = row.original
+      if (original.volumeValue == null || original.volumeExponent == null) return '–'
+      return h(ScientificNotation, {
+        value: original.volumeValue,
+        exponent: original.volumeExponent,
+        unit: t('units.m3')
+      })
     },
     meta: {
       class: {
@@ -116,14 +122,19 @@ const columns: TableColumn<CelestialBody>[] = [
   },
   {
     id: 'mass',
-    header: t('catalog.columns.mass'),
+    header: t('attributes.mass'),
     accessorFn: (row) => {
       if (row.massValue == null || row.massExponent == null) return null
       return row.massValue * 10 ** row.massExponent
     },
-    cell: ({ getValue }) => {
-      const mass = getValue<number | null>()
-      return mass === null ? '–' : `${mass.toExponential(2)} kg`
+    cell: ({ row }) => {
+      const original = row.original
+      if (original.massValue == null || original.massExponent == null) return '–'
+      return h(ScientificNotation, {
+        value: original.massValue,
+        exponent: original.massExponent,
+        unit: t('units.kg')
+      })
     },
     meta: {
       class: {
@@ -148,6 +159,11 @@ const onClickType = (type: CelestialBodyType) => {
   } else {
     selectedTypes.value.push(type)
   }
+}
+
+const onClickRow = (row: TableRow<CelestialBody>) => {
+  const bodyId = bodiesResult.value?.data[Number.parseInt(row.id)]!.id
+  navigateTo(`/catalog/${bodyId}`)
 }
 </script>
 
@@ -212,6 +228,7 @@ const onClickType = (type: CelestialBodyType) => {
         :columns
         :loading="bodiesLoading"
         sticky
+        @select="(_, row) => onClickRow(row)"
       >
         <template #empty>
           <EmptyState

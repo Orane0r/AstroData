@@ -15,14 +15,40 @@
   "catalog": {
     "title": "Catalogue",
     "description": "{count} objets · filtrez, triez, explorez",
-    "search_placeholder": "Rechercher...",
-    "columns": {
-      "name": "Nom",
-      "type": "Type",
-      "size": "Taille",
-      "volume": "Volume",
-      "mass": "Masse"
-    }
+    "search_placeholder": "Rechercher..."
+  },
+
+  "body_sheet": {
+    "characteristics": "Caractéristiques",
+    "profile": "Profil",
+    "interactive_view": "Vue interactive"
+  },
+
+  "attributes": {
+    "name": "Nom",
+    "type": "Type",
+    "size": "Taille",
+    "volume": "Volume",
+    "mean_radius": "Rayon moyen",
+    "mass": "Masse",
+    "density": "Densité",
+    "gravity": "Gravité",
+    "average_temperature": "Température moyenne",
+    "sideral_orbit": "Période orbitale",
+    "sideral_rotation": "Rotation sidérale",
+    "distance_from_sun": "Distance au Soleil"
+  },
+
+  "units": {
+    "km": "km",
+    "kg": "kg",
+    "m2": "m²",
+    "m3": "m³",
+    "g/cm3": "g/cm³",
+    "m/s²": "m/s²",
+    "C": "°C",
+    "years": "ans",
+    "h": "h"
   },
 
   "state": {

@@ -7,7 +7,8 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     '@nuxthub/core',
     '@nuxt/image',
-    '@nuxtjs/i18n'
+    '@nuxtjs/i18n',
+    '@wgr-sa/nuxt-panzoom'
   ],
 
   devtools: {
