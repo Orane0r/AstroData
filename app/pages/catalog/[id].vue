@@ -107,6 +107,7 @@ function handlePanzoomChange(event: Event) {
 }
 
 interface RadarDatum {
+  [key: string]: unknown;
   metric: string;
   productA: number;
   productB: number;
@@ -215,7 +216,8 @@ const categories: Record<string, BulletLegendItemInterface> = {
             <h2 class="font-semibold tracking-wide text-dimmed uppercase">
               {{ $t('body_sheet.profile') }}
             </h2>
-
+          </template>
+          <div class="pt-10">
             <RadarChart
               :data="radarChartData"
               :categories="categories"
@@ -224,7 +226,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
               :fill-opacity="0.35"
               :legend-position="LegendPosition.BottomCenter"
             />
-          </template>
+          </div>
         </UCard>
       </div>
       <div>cadre galerie</div>
