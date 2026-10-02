@@ -108,17 +108,16 @@ function handlePanzoomChange(event: Event) {
 }
 
 const radarChartData: RadarDatum[] = [
-  { metric: 'Performance', productA: 90, productB: 72 },
-  { metric: 'Reliability', productA: 78, productB: 85 },
-  { metric: 'Comfort', productA: 66, productB: 80 },
-  { metric: 'Safety', productA: 88, productB: 74 },
-  { metric: 'Efficiency', productA: 70, productB: 90 },
-  { metric: 'Design', productA: 82, productB: 68 }
+  { metric: t('attributes.mass'), body: 78, average: 85 },
+  { metric: t('attributes.radius'), body: 90, average: 72 },
+  { metric: t('attributes.gravity'), body: 66, average: 80 },
+  { metric: t('attributes.abbreviated.temperature'), body: 88, average: 74 },
+  { metric: t('attributes.moons'), body: 70, average: 90 }
 ]
 
 const categories: Record<string, BulletLegendItemInterface> = {
-  productA: { name: 'Product A', color: 'var(--color-primary)' },
-  productB: { name: 'Product B', color: 'var(--color-secondary)' }
+  body: { name: body.value?.name ?? '' },
+  average: { name: 'Moyenne' }
 }
 </script>
 
