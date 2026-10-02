@@ -8,7 +8,8 @@ export default defineNuxtConfig({
     '@nuxthub/core',
     '@nuxt/image',
     '@nuxtjs/i18n',
-    '@wgr-sa/nuxt-panzoom'
+    '@wgr-sa/nuxt-panzoom',
+    'nuxt-charts'
   ],
 
   devtools: {
