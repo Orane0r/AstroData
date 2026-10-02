@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { BreadcrumbItem } from '@nuxt/ui'
+import type { RadarDatum } from '~/types/chart'
 
 import { formatNumber } from '~/utils/format-number'
 
@@ -106,26 +107,19 @@ function handlePanzoomChange(event: Event) {
   }
 }
 
-interface RadarDatum {
-  [key: string]: unknown;
-  metric: string;
-  productA: number;
-  productB: number;
-}
-
 const radarChartData: RadarDatum[] = [
-  { metric: "Performance", productA: 90, productB: 72 },
-  { metric: "Reliability", productA: 78, productB: 85 },
-  { metric: "Comfort", productA: 66, productB: 80 },
-  { metric: "Safety", productA: 88, productB: 74 },
-  { metric: "Efficiency", productA: 70, productB: 90 },
-  { metric: "Design", productA: 82, productB: 68 },
-];
+  { metric: 'Performance', productA: 90, productB: 72 },
+  { metric: 'Reliability', productA: 78, productB: 85 },
+  { metric: 'Comfort', productA: 66, productB: 80 },
+  { metric: 'Safety', productA: 88, productB: 74 },
+  { metric: 'Efficiency', productA: 70, productB: 90 },
+  { metric: 'Design', productA: 82, productB: 68 }
+]
 
 const categories: Record<string, BulletLegendItemInterface> = {
-  productA: { name: "Product A", color: "var(--color-blue-400)" },
-  productB: { name: "Product B", color: "var(--color-pink-400)" },
-};
+  productA: { name: 'Product A', color: 'var(--color-primary)' },
+  productB: { name: 'Product B', color: 'var(--color-secondary)' }
+}
 </script>
 
 <template>
@@ -210,20 +204,23 @@ const categories: Record<string, BulletLegendItemInterface> = {
           </div>
         </UCard>
         <UCard
-          class="flex-1"
+          class="flex flex-1 flex-col"
+          :ui="{ body: 'flex flex-1 flex-col p-0 sm:p-0' }"
         >
           <template #header>
             <h2 class="font-semibold tracking-wide text-dimmed uppercase">
               {{ $t('body_sheet.profile') }}
             </h2>
           </template>
-          <div class="pt-10">
+          <div
+            class="min-h-0 flex-1 [&_.vue-chrts]:h-full [&_.vcharts-responsive-container]:h-full!"
+          >
             <RadarChart
               :data="radarChartData"
               :categories="categories"
               data-key="metric"
-              :height="320"
-              :fill-opacity="0.35"
+              :height="480"
+              :fill-opacity="0.15"
               :legend-position="LegendPosition.BottomCenter"
             />
           </div>
