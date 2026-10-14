@@ -39,6 +39,9 @@
       "temperature": "Temp."
     }
   },
+  "maths": {
+    "average": "Average"
+  },
   "units": {
     "km": "km",
     "kg": "kg",

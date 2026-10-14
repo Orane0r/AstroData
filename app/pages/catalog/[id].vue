@@ -117,7 +117,7 @@ const radarChartData: RadarDatum[] = [
 
 const categories: Record<string, BulletLegendItemInterface> = {
   body: { name: body.value?.name ?? '' },
-  average: { name: 'Moyenne' }
+  average: { name: t('maths.average') }
 }
 </script>
 
