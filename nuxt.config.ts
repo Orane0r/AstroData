@@ -61,6 +61,8 @@ export default defineNuxtConfig({
     db: 'sqlite'
   },
 
+  debug: true,
+
   eslint: {
     config: {
       stylistic: {
