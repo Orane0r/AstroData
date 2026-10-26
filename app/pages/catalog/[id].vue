@@ -2,6 +2,7 @@
 import type { BreadcrumbItem } from '@nuxt/ui'
 
 import { formatNumber } from '~/utils/format-number'
+import { kelvinToCelsius } from '~~/shared/utils/conversion'
 
 interface PanzoomImage extends HTMLImageElement {
   panzoom?: {
@@ -69,7 +70,7 @@ const characteristics = computed<Characteristic[]>(() => {
     },
     {
       label: t('attributes.average_temperature'),
-      value: `${formatNumber(body.value.averageTemperature - 273.15)} ${t('units.C')}`,
+      value: `${formatNumber(kelvinToCelsius(body.value.averageTemperature))} ${t('units.C')}`,
       icon: 'i-solar-temperature-outline'
     },
     {
@@ -116,7 +117,7 @@ const radarChartData: RadarDatum[] = [
   { metric: t('attributes.mass'), body: 78, average: 85 },
   { metric: t('attributes.radius'), body: 90, average: 72 },
   { metric: t('attributes.gravity'), body: 66, average: 80 },
-  { metric: t('attributes.abbreviated.temperature'), body: 88, average: 74 },
+  { metric: t('attributes.abbreviated.temperature'), body: 88, average: kelvinToCelsius(74) },
   { metric: t('attributes.moons'), body: 70, average: 90 }
 ]
 
