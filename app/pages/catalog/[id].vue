@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { BreadcrumbItem } from '@nuxt/ui'
-import type { RadarDatum } from '~/types/chart'
 
 import { formatNumber } from '~/utils/format-number'
 
@@ -8,6 +7,12 @@ interface PanzoomImage extends HTMLImageElement {
   panzoom?: {
     zoomWithWheel: (event: WheelEvent) => void
   }
+}
+
+type RadarDatum = {
+  metric: string
+  body: number
+  average: number
 }
 
 const route = useRoute()
