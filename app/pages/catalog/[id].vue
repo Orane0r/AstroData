@@ -252,6 +252,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
           <div
             class="min-h-0 flex-1 [&_.vue-chrts]:h-full [&_.vcharts-responsive-container]:h-full!"
           >
+            <!-- TODO adapter les indicateurs en fonction du type de l'objet (ex : ne pas mettre le nombre de lunes si c'est une lune) -->
             <RadarChart
               :data="radarChartData"
               :categories="categories"

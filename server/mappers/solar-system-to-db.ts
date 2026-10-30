@@ -1,5 +1,6 @@
 import { BodyType, type SolarSystemBodyData } from '../types/solar-system'
-import type { CelestialBodyType, NewCelestialBody } from '../../shared/types/db'
+import type { CelestialBodyType, NewCelestialBody } from '~~/shared/types/db'
+import { removeNumberPrefix } from '~~/shared/utils/string'
 
 const BODY_TYPE_MAP: Record<BodyType, CelestialBodyType> = {
   [BodyType.Planet]: 'Planet',
@@ -10,6 +11,13 @@ const BODY_TYPE_MAP: Record<BodyType, CelestialBodyType> = {
   [BodyType.Star]: 'Star'
 }
 
+/**
+ * Turns dataset data into clean data ready to be inserted in database.
+ * @param body Base data.
+ * @param parentId Id of the parent's body.
+ * @param imageUrl Image of the body.
+ * @returns Cleaned and mapped data.
+ */
 export function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyData, parentId: number | null, imageUrl: string | null): NewCelestialBody {
   const safeNumber = (value: unknown, defaultValue: number = 0): number => {
     const num = Number(value)
@@ -18,7 +26,7 @@ export function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyData, parentId:
 
   return {
     parentId: parentId,
-    name: body.englishName,
+    name: removeNumberPrefix(body.englishName),
     type: BODY_TYPE_MAP[body.bodyType],
     meanRadius: safeNumber(body.meanRadius),
     massValue: body.mass?.massValue ?? null,
