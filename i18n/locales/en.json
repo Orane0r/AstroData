@@ -18,7 +18,8 @@
   "body_sheet": {
     "characteristics": "Characteristics",
     "profile": "Profile",
-    "interactive_view": "Interactive View"
+    "interactive_view": "Interactive View",
+    "wikipedia": "See on Wikipedia"
   },
   "attributes": {
     "name": "Name",

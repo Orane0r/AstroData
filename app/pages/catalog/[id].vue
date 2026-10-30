@@ -203,7 +203,15 @@ const categories: Record<string, BulletLegendItemInterface> = {
           <h1 class="text-3xl  sm:text-4xl font-bold text-highlighted">
             {{ body?.name }}
           </h1>
-          <div>description wikipedia + lien wikipedia</div>
+          <div>description wikipedia</div>
+          <ULink
+            v-if="body?.wikipedia"
+            :to="body.wikipedia"
+            target="_blank"
+            class="inline-flex items-center gap-1 text-sm text-primary"
+          >
+            {{ $t('body_sheet.wikipedia') }}
+          </ULink>
         </div>
       </div>
       <div class="flex flex-row gap-4">
