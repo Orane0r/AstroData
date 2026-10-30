@@ -2,7 +2,8 @@
 import type { BreadcrumbItem } from '@nuxt/ui'
 
 import { formatNumber } from '~/utils/format-number'
-import { kelvinToCelsius } from '~~/shared/utils/conversion'
+import { kelvinToCelsius, scientificToValue } from '~~/shared/utils/conversion'
+import { scaleToMax } from '~~/shared/utils/maths'
 
 interface PanzoomImage extends HTMLImageElement {
   panzoom?: {
@@ -23,6 +24,12 @@ const isDialogOpened = ref(false)
 const zoom = ref<PanzoomImage | null>(null)
 
 const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
+const { data: averages } = await useFetch<CelestialBodyAverages>(`/api/celestial-bodies/averages`, {
+  query: {
+    type: body.value?.type
+  }
+})
+const { data: moons } = await useFetch<CelestialBody[]>(`/api/celestial-bodies/${route.params.id}/moons`)
 
 interface Characteristic {
   label: string
@@ -113,16 +120,38 @@ function handlePanzoomChange(event: Event) {
   }
 }
 
-const radarChartData: RadarDatum[] = [
-  { metric: t('attributes.mass'), body: 78, average: 85 },
-  { metric: t('attributes.radius'), body: 90, average: 72 },
-  { metric: t('attributes.gravity'), body: 66, average: 80 },
-  { metric: t('attributes.abbreviated.temperature'), body: 88, average: kelvinToCelsius(74) },
-  { metric: t('attributes.moons'), body: 70, average: 90 }
-]
+// Each metric is scaled on its own: the larger of (body, average) = 100.
+// `decades` = log scale for metrics spanning several orders of magnitude.
+const radarChartData = computed<RadarDatum[]>(() => {
+  if (!body.value || !averages.value) {
+    return []
+  }
+
+  const { data: avg } = averages.value
+  const b = body.value
+  const metrics: { label: string, body: number, average: number | null, decades?: number }[] = [
+    {
+      label: t('attributes.mass'),
+      body: b.massValue && b.massExponent ? scientificToValue({ value: b.massValue, exponent: b.massExponent }) : 0,
+      average: avg.mass && scientificToValue(avg.mass),
+      decades: 6
+    },
+    { label: t('attributes.radius'), body: b.meanRadius, average: avg.meanRadius, decades: 3 },
+    { label: t('attributes.gravity'), body: b.gravity, average: avg.gravity },
+    // Kelvin, not Celsius: a ratio needs a zero that means "nothing"
+    { label: t('attributes.abbreviated.temperature'), body: b.averageTemperature, average: avg.averageTemperature },
+    { label: t('attributes.moons'), body: moons.value?.length ?? 0, average: avg.moons, decades: 2 }
+  ]
+
+  return metrics.map(({ label, body, average, decades }) => {
+    const [scaledBody = 0, scaledAverage = 0] = scaleToMax([body, average ?? 0], decades)
+    return { metric: label, body: scaledBody, average: scaledAverage }
+  })
+})
 
 const categories: Record<string, BulletLegendItemInterface> = {
   body: { name: body.value?.name ?? '' },
+  // TODO mettre moyenne des <type> (<nombre d'objets>)
   average: { name: t('maths.average') }
 }
 </script>
@@ -227,6 +256,8 @@ const categories: Record<string, BulletLegendItemInterface> = {
               :height="480"
               :fill-opacity="0.15"
               :legend-position="LegendPosition.BottomCenter"
+              hide-radius-axis
+              hide-tooltip
             />
           </div>
         </UCard>
