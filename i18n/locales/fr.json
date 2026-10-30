@@ -39,8 +39,24 @@
       "temperature": "Temp."
     }
   },
-  "maths": {
-    "average": "Moyenne"
+  "body_types": {
+    "planet": "Planète",
+    "moon": "Lune",
+    "asteroid": "Astéroïde",
+    "comet": "Comète",
+    "dwarf_planet": "Planète naine",
+    "star": "Étoile",
+    "plural": {
+      "planet": "Planètes",
+      "moon": "Lunes",
+      "asteroid": "Astéroïdes",
+      "comet": "Comètes",
+      "dwarf_planet": "Planètes naines",
+      "star": "Étoiles"
+    }
+  },
+  "radar": {
+    "average": "Moyenne des {type}"
   },
   "units": {
     "km": "km",

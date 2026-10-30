@@ -7,46 +7,60 @@ import type { Color } from '~/types/color'
  */
 type BodyTypeConfig = Record<CelestialBodyType, {
   label: string
+  pluralLabel: string
   color: Color
   icon: string
   order: number
 }>
 
-export const BODY_TYPE_CONFIG: BodyTypeConfig = {
-  'Planet': {
-    label: 'Planète',
-    color: 'primary',
-    icon: 'i-solar-planet-outline',
-    order: CELESTIAL_BODY_TYPE_ORDER.Planet
-  },
-  'Moon': {
-    label: 'Lune',
-    color: 'rock',
-    icon: 'i-solar-moon-outline',
-    order: CELESTIAL_BODY_TYPE_ORDER.Moon
-  },
-  'Asteroid': {
-    label: 'Astéroïde',
-    color: 'rock',
-    icon: 'i-solar-asteroid-outline',
-    order: CELESTIAL_BODY_TYPE_ORDER.Asteroid
-  },
-  'Comet': {
-    label: 'Comète',
-    color: 'stardust',
-    icon: 'i-solar-star-fall-minimalistic-outline',
-    order: CELESTIAL_BODY_TYPE_ORDER.Comet
-  },
-  'Dwarf planet': {
-    label: 'Planète naine',
-    color: 'earth',
-    icon: 'i-solar-planet-3-outline',
-    order: CELESTIAL_BODY_TYPE_ORDER['Dwarf planet']
-  },
-  'Star': {
-    label: 'Étoile',
-    color: 'star',
-    icon: 'i-solar-star-outline',
-    order: CELESTIAL_BODY_TYPE_ORDER.Star
+/**
+ * Must be called in a `setup` function (uses `useI18n`).
+ */
+export function useBodyTypeConfig(): BodyTypeConfig {
+  const { t } = useI18n()
+
+  return {
+    'Planet': {
+      label: t('body_types.planet'),
+      pluralLabel: t('body_types.plural.planet'),
+      color: 'primary',
+      icon: 'i-solar-planet-outline',
+      order: CELESTIAL_BODY_TYPE_ORDER.Planet
+    },
+    'Moon': {
+      label: t('body_types.moon'),
+      pluralLabel: t('body_types.plural.moon'),
+      color: 'rock',
+      icon: 'i-solar-moon-outline',
+      order: CELESTIAL_BODY_TYPE_ORDER.Moon
+    },
+    'Asteroid': {
+      label: t('body_types.asteroid'),
+      pluralLabel: t('body_types.plural.asteroid'),
+      color: 'rock',
+      icon: 'i-solar-asteroid-outline',
+      order: CELESTIAL_BODY_TYPE_ORDER.Asteroid
+    },
+    'Comet': {
+      label: t('body_types.comet'),
+      pluralLabel: t('body_types.plural.comet'),
+      color: 'stardust',
+      icon: 'i-solar-star-fall-minimalistic-outline',
+      order: CELESTIAL_BODY_TYPE_ORDER.Comet
+    },
+    'Dwarf planet': {
+      label: t('body_types.dwarf_planet'),
+      pluralLabel: t('body_types.plural.dwarf_planet'),
+      color: 'earth',
+      icon: 'i-solar-planet-3-outline',
+      order: CELESTIAL_BODY_TYPE_ORDER['Dwarf planet']
+    },
+    'Star': {
+      label: t('body_types.star'),
+      pluralLabel: t('body_types.plural.star'),
+      color: 'star',
+      icon: 'i-solar-star-outline',
+      order: CELESTIAL_BODY_TYPE_ORDER.Star
+    }
   }
 }

@@ -39,8 +39,24 @@
       "temperature": "Temp."
     }
   },
-  "maths": {
-    "average": "Average"
+  "body_types": {
+    "planet": "Planet",
+    "moon": "Moon",
+    "asteroid": "Asteroid",
+    "comet": "Comet",
+    "dwarf_planet": "Dwarf planet",
+    "star": "Star",
+    "plural": {
+      "planet": "Planets",
+      "moon": "Moon",
+      "asteroid": "Asteroids",
+      "comet": "Comets",
+      "dwarf_planet": "Dwarf planets",
+      "star": "Stars"
+    }
+  },
+  "radar": {
+    "average": "Average of {type}"
   },
   "units": {
     "km": "km",

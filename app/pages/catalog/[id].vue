@@ -4,6 +4,7 @@ import type { BreadcrumbItem } from '@nuxt/ui'
 import { formatNumber } from '~/utils/format-number'
 import { kelvinToCelsius, scientificToValue } from '~~/shared/utils/conversion'
 import { scaleToMax } from '~~/shared/utils/maths'
+import { useBodyTypeConfig } from '../../utils/body-config.ts'
 
 interface PanzoomImage extends HTMLImageElement {
   panzoom?: {
@@ -19,6 +20,8 @@ type RadarDatum = {
 
 const route = useRoute()
 const { t } = useI18n()
+
+const BODY_TYPE_CONFIG = useBodyTypeConfig()
 
 const isDialogOpened = ref(false)
 const zoom = ref<PanzoomImage | null>(null)
@@ -152,7 +155,7 @@ const radarChartData = computed<RadarDatum[]>(() => {
 const categories: Record<string, BulletLegendItemInterface> = {
   body: { name: body.value?.name ?? '' },
   // TODO mettre moyenne des <type> (<nombre d'objets>)
-  average: { name: t('maths.average') }
+  average: { name: t('radar.average', { type: BODY_TYPE_CONFIG[body.value!.type].pluralLabel.toLocaleLowerCase() }) }
 }
 </script>
 

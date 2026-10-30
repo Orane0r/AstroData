@@ -8,6 +8,7 @@ const UAvatar = resolveComponent('UAvatar')
 const ScientificNotation = resolveComponent('ScientificNotation')
 
 const { t } = useI18n()
+const BODY_TYPE_CONFIG = useBodyTypeConfig()
 
 const selectedTypes = ref<CelestialBodyType[]>(['Moon', 'Planet'])
 
@@ -205,7 +206,7 @@ const onClickRow = (row: TableRow<CelestialBody>) => {
           <UBadge
             v-for="type in types"
             :key="type"
-            :label="type"
+            :label="BODY_TYPE_CONFIG[type]!.label"
             :variant="selectedTypes.includes(type) ? 'subtle' : 'outline'"
             :color="selectedTypes.includes(type) ? BODY_TYPE_CONFIG[type]!.color : 'neutral'"
             :icon="BODY_TYPE_CONFIG[type]!.icon"
