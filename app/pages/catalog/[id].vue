@@ -199,8 +199,10 @@ const categories: Record<string, BulletLegendItemInterface> = {
             </template>
           </UModal>
         </div>
-        <div class="flex-2 min-h-50">
-          <div>nom</div>
+        <div class="flex-2 min-h-50 flex flex-col gap-4">
+          <h1 class="text-3xl  sm:text-4xl font-bold text-highlighted">
+            {{ body?.name }}
+          </h1>
           <div>description wikipedia + lien wikipedia</div>
         </div>
       </div>
