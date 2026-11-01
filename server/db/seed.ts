@@ -1,3 +1,5 @@
+// TODO détecter si une migration a été faite / est en cours au lancement, re-seed s'il y en a une
+
 import type { SolarSystem, SolarSystemBodyData } from '../types/solar-system'
 import { db, schema } from '@nuxthub/db'
 
