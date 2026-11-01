@@ -1,0 +1,1 @@
+ALTER TABLE `celestial_bodies` ADD `wikipedia` text;

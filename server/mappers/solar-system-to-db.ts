@@ -1,5 +1,7 @@
 import { BodyType, type SolarSystemBodyData } from '../types/solar-system'
-import type { CelestialBodyType, NewCelestialBody } from '../../shared/types/db'
+import type { CelestialBodyType, NewCelestialBody } from '~~/shared/types/db'
+import { removeNumberPrefix } from '~~/shared/utils/string'
+import { fetchWikipediaImageUrl } from '../services/wikipedia'
 
 const BODY_TYPE_MAP: Record<BodyType, CelestialBodyType> = {
   [BodyType.Planet]: 'Planet',
@@ -10,15 +12,27 @@ const BODY_TYPE_MAP: Record<BodyType, CelestialBodyType> = {
   [BodyType.Star]: 'Star'
 }
 
-export function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyData, parentId: number | null, imageUrl: string | null): NewCelestialBody {
+/**
+ * Turns dataset data into clean data ready to be inserted in database.
+ * @param body Base data.
+ * @param parentId Id of the parent's body.
+ * @param wikiUrl Wikipedia URL.
+ * @returns Cleaned and mapped data.
+ */
+export async function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyData, parentId: number | null, wikiUrl: string | null): Promise<NewCelestialBody> {
   const safeNumber = (value: unknown, defaultValue: number = 0): number => {
     const num = Number(value)
     return Number.isNaN(num) ? defaultValue : num
   }
 
+  let imageUrl = null
+  if (wikiUrl) {
+    imageUrl = await fetchWikipediaImageUrl(wikiUrl)
+  }
+
   return {
     parentId: parentId,
-    name: body.englishName,
+    name: removeNumberPrefix(body.englishName),
     type: BODY_TYPE_MAP[body.bodyType],
     meanRadius: safeNumber(body.meanRadius),
     massValue: body.mass?.massValue ?? null,
@@ -32,6 +46,7 @@ export function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyData, parentId:
     sideralRotation: safeNumber(body.sideralRotation),
     semimajorAxis: safeNumber(body.semimajorAxis),
     alternativeName: body.alternativeName || null,
-    imageUrl: imageUrl
+    imageUrl: imageUrl,
+    wikipedia: wikiUrl
   }
 }

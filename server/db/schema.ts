@@ -38,7 +38,8 @@ export const celestialBodies = sqliteTable('celestial_bodies', {
   // km
   semimajorAxis: real().notNull().default(0),
   alternativeName: text(),
-  imageUrl: text()
+  imageUrl: text(),
+  wikipedia: text()
 })
 
 export const celestialBodiesRelations = relations(celestialBodies, ({ one, many }) => ({

@@ -2,6 +2,9 @@
 import type { BreadcrumbItem } from '@nuxt/ui'
 
 import { formatNumber } from '~/utils/format-number'
+import { kelvinToCelsius, scientificToValue } from '~~/shared/utils/conversion'
+import { scaleToMax } from '~~/shared/utils/maths'
+import { useBodyTypeConfig } from '../../utils/body-config.ts'
 
 interface PanzoomImage extends HTMLImageElement {
   panzoom?: {
@@ -9,13 +12,27 @@ interface PanzoomImage extends HTMLImageElement {
   }
 }
 
+type RadarDatum = {
+  metric: string
+  body: number
+  average: number
+}
+
 const route = useRoute()
 const { t } = useI18n()
+
+const BODY_TYPE_CONFIG = useBodyTypeConfig()
 
 const isDialogOpened = ref(false)
 const zoom = ref<PanzoomImage | null>(null)
 
 const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
+const { data: averages } = await useFetch<CelestialBodyAverages>(`/api/celestial-bodies/averages`, {
+  query: {
+    type: body.value?.type
+  }
+})
+const { data: moons } = await useFetch<CelestialBody[]>(`/api/celestial-bodies/${route.params.id}/moons`)
 
 interface Characteristic {
   label: string
@@ -63,7 +80,7 @@ const characteristics = computed<Characteristic[]>(() => {
     },
     {
       label: t('attributes.average_temperature'),
-      value: `${formatNumber(body.value.averageTemperature - 273.15)} ${t('units.C')}`,
+      value: `${formatNumber(kelvinToCelsius(body.value.averageTemperature))} ${t('units.C')}`,
       icon: 'i-solar-temperature-outline'
     },
     {
@@ -104,6 +121,41 @@ function handlePanzoomChange(event: Event) {
   if (zoom.value) {
     zoom.value.style.cursor = scale > 1.001 ? 'grab' : 'zoom-in'
   }
+}
+
+// Each metric is scaled on its own: the larger of (body, average) = 100.
+// `decades` = log scale for metrics spanning several orders of magnitude.
+const radarChartData = computed<RadarDatum[]>(() => {
+  if (!body.value || !averages.value) {
+    return []
+  }
+
+  const { data: avg } = averages.value
+  const b = body.value
+  const metrics: { label: string, body: number, average: number | null, decades?: number }[] = [
+    {
+      label: t('attributes.mass'),
+      body: b.massValue && b.massExponent ? scientificToValue({ value: b.massValue, exponent: b.massExponent }) : 0,
+      average: avg.mass && scientificToValue(avg.mass),
+      decades: 6
+    },
+    { label: t('attributes.radius'), body: b.meanRadius, average: avg.meanRadius, decades: 3 },
+    { label: t('attributes.gravity'), body: b.gravity, average: avg.gravity },
+    // Kelvin, not Celsius: a ratio needs a zero that means "nothing"
+    { label: t('attributes.abbreviated.temperature'), body: b.averageTemperature, average: avg.averageTemperature },
+    { label: t('attributes.moons'), body: moons.value?.length ?? 0, average: avg.moons, decades: 2 }
+  ]
+
+  return metrics.map(({ label, body, average, decades }) => {
+    const [scaledBody = 0, scaledAverage = 0] = scaleToMax([body, average ?? 0], decades)
+    return { metric: label, body: scaledBody, average: scaledAverage }
+  })
+})
+
+const categories: Record<string, BulletLegendItemInterface> = {
+  body: { name: body.value?.name ?? '' },
+  // TODO mettre moyenne des <type> (<nombre d'objets>)
+  average: { name: t('radar.average', { type: BODY_TYPE_CONFIG[body.value!.type].pluralLabel.toLocaleLowerCase() }) }
 }
 </script>
 
@@ -147,9 +199,19 @@ function handlePanzoomChange(event: Event) {
             </template>
           </UModal>
         </div>
-        <div class="flex-2 min-h-50">
-          <div>nom</div>
-          <div>description wikipedia + lien wikipedia</div>
+        <div class="flex-2 min-h-50 flex flex-col gap-4">
+          <h1 class="text-3xl  sm:text-4xl font-bold text-highlighted">
+            {{ body?.name }}
+          </h1>
+          <div>description wikipedia</div>
+          <ULink
+            v-if="body?.wikipedia"
+            :to="body.wikipedia"
+            target="_blank"
+            class="inline-flex items-center gap-1 text-sm text-primary"
+          >
+            {{ $t('body_sheet.wikipedia') }}
+          </ULink>
         </div>
       </div>
       <div class="flex flex-row gap-4">
@@ -189,13 +251,29 @@ function handlePanzoomChange(event: Event) {
           </div>
         </UCard>
         <UCard
-          class="flex-1"
+          class="flex flex-1 flex-col"
+          :ui="{ body: 'flex flex-1 flex-col p-0 sm:p-0' }"
         >
           <template #header>
             <h2 class="font-semibold tracking-wide text-dimmed uppercase">
               {{ $t('body_sheet.profile') }}
             </h2>
           </template>
+          <div
+            class="min-h-0 flex-1 [&_.vue-chrts]:h-full [&_.vcharts-responsive-container]:h-full!"
+          >
+            <!-- TODO adapter les indicateurs en fonction du type de l'objet (ex : ne pas mettre le nombre de lunes si c'est une lune) -->
+            <RadarChart
+              :data="radarChartData"
+              :categories="categories"
+              data-key="metric"
+              :height="480"
+              :fill-opacity="0.15"
+              :legend-position="LegendPosition.BottomCenter"
+              hide-radius-axis
+              hide-tooltip
+            />
+          </div>
         </UCard>
       </div>
       <div>cadre galerie</div>
