@@ -26,23 +26,22 @@ export async function seedDatabase() {
   await db.transaction(async (tx) => {
     await tx.delete(schema.celestialBodies)
 
-    for (const body of bodiesWithoutParent) {
+    await Array.fromAsync(bodiesWithoutParent, async (body) => {
       const result = await tx
         .insert(schema.celestialBodies)
-        .values(await mapSolarSystemBodiesApiToDb(body, null, await findWikiUrl(wikiUrls, body)))
+        .values(await mapSolarSystemBodiesApiToDb(body, null, findWikiUrl(wikiUrls, body)))
 
-      const id = Number(result.lastInsertRowid)
+      cachedIds.push({ idDb: Number(result.lastInsertRowid), idApi: body.id })
+    })
 
-      cachedIds.push({ idDb: id, idApi: body.id })
-    }
-
-    for (const body of bodiesWithParent) {
-      const parentId = _.find(cachedIds, cachedId => body.aroundPlanet?.planet == cachedId.idApi)?.idDb ?? null
+    await Array.fromAsync(bodiesWithParent, async (body) => {
+      const parentId = cachedIds.find(cachedId => body.aroundPlanet?.planet
+        == cachedId.idApi)?.idDb ?? null
 
       await tx
         .insert(schema.celestialBodies)
-        .values(await mapSolarSystemBodiesApiToDb(body, parentId, await findWikiUrl(wikiUrls, body)))
-    }
+        .values(await mapSolarSystemBodiesApiToDb(body, parentId, findWikiUrl(wikiUrls, body)))
+    })
   })
 
   consola.success('Database seeded successfully.')
