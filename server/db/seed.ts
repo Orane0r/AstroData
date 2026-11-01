@@ -48,6 +48,6 @@ export async function seedDatabase() {
   consola.success('Database seeded successfully.')
 }
 
-async function findWikiUrl(wikiImages: WikipediaLink[], body: SolarSystemBodyData): Promise<string | null> {
+function findWikiUrl(wikiImages: WikipediaLink[], body: SolarSystemBodyData): string | null {
   return wikiImages.find(img => img.name == body.englishName)?.url ?? null
 }
