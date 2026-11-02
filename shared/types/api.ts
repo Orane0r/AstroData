@@ -15,3 +15,17 @@ export type CelestialBodyAverages = {
     moons: number | null
   }
 }
+
+export type CelestialBodyImage = {
+  title: string
+  description: string
+  date: Date
+  thumbnail: Image
+  fullsize: Image
+}
+
+type Image = {
+  url: string
+  height: number
+  width: number
+}
