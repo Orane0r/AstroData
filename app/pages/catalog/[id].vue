@@ -19,7 +19,7 @@ type RadarDatum = {
 }
 
 const route = useRoute()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const BODY_TYPE_CONFIG = useBodyTypeConfig()
 
@@ -33,6 +33,11 @@ const { data: averages } = await useFetch<CelestialBodyAverages>(`/api/celestial
   }
 })
 const { data: moons } = await useFetch<CelestialBody[]>(`/api/celestial-bodies/${route.params.id}/moons`)
+// Re-fetched when the locale changes; the API falls back to English when the page has no translation.
+const { data: description } = await useFetch<{ lang: string, extract: string } | null>(
+  `/api/celestial-bodies/${route.params.id}/description`,
+  { query: { lang: locale } }
+)
 
 interface Characteristic {
   label: string
@@ -203,7 +208,14 @@ const categories: Record<string, BulletLegendItemInterface> = {
           <h1 class="text-3xl  sm:text-4xl font-bold text-highlighted">
             {{ body?.name }}
           </h1>
-          <div>description wikipedia</div>
+          <p
+            v-if="description"
+            :lang="description.lang"
+            class="text-muted text-justify hyphens-auto"
+          >
+            {{ description.extract }}
+          </p>
+          <!-- TODO gérer la langue de l'url -->
           <ULink
             v-if="body?.wikipedia"
             :to="body.wikipedia"

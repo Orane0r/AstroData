@@ -8,7 +8,7 @@ const idParamSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const pathname = getRequestURL(event).pathname
-  const match = /^\/api\/celestial-bodies\/([^/]+)(?:\/moons)?\/?$/.exec(pathname)
+  const match = /^\/api\/celestial-bodies\/([^/]+)(?:\/(?:moons|description))?\/?$/.exec(pathname)
 
   if (!match?.[1]) {
     return

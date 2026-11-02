@@ -224,6 +224,7 @@ const onClickRow = (row: TableRow<CelestialBody>) => {
 
       <!-- TODO sorting -->
 
+      <!-- FIXME corriger délais après le clic sur une ligne pour passer à l'étape suivant -->
       <UTable
         :data="bodies"
         :columns
