@@ -1,6 +1,7 @@
 import { celestialBodies } from 'hub:db:schema'
 import { db } from 'hub:db'
 import { eq } from 'drizzle-orm'
+import { mapNasaImagesToCelestialBodyImages } from '~~/server/mappers/nasa-images-to-celestial-body-images'
 import { fetchNasaImages } from '~~/server/services/nasa'
 import z from 'zod'
 
@@ -20,6 +21,10 @@ export default defineCachedEventHandler(async (event) => {
     .where(eq(celestialBodies.id, id))
     .limit(1)
 
-  // TODO mapper les données d'api vers CelestialBodyImage
-  return body?.name ? fetchNasaImages(body.name, page, pageSize) : null
+  if (!body?.name) {
+    return null
+  }
+
+  const nasaImages = await fetchNasaImages(body.name, page, pageSize)
+  return mapNasaImagesToCelestialBodyImages(nasaImages)
 })
