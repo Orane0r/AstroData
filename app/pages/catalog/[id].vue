@@ -280,7 +280,11 @@ const categories: Record<string, BulletLegendItemInterface> = {
           </div>
         </UCard>
       </div>
-      <div>cadre galerie</div>
+      <UCard
+        :title="$t('body_sheet.gallery')"
+      >
+        galerie
+      </UCard>
       <div>missions liées</div>
       <div>objets liés (à voir)</div>
     </UPageBody>
