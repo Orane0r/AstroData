@@ -289,6 +289,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
         </UCard>
       </div>
       <div>cadre galerie</div>
+      <div>missions liées</div>
       <div>objets liés (à voir)</div>
     </UPageBody>
   </UPage>

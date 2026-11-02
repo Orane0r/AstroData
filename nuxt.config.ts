@@ -1,4 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+// Workaround: libsql hangs/crashes (exit code 3221225477) when its native addon is loaded
+// only in worker threads, which is what Nitro's dev server does on every reload.
+// Loading it once in the main process avoids it. Remove once fixed upstream (issue : https://github.com/tursodatabase/libsql-js/issues/249).
+import '@libsql/client'
+
 export default defineNuxtConfig({
   modules: [
     '@nuxtjs/google-fonts',
