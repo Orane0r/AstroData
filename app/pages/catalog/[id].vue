@@ -229,13 +229,9 @@ const categories: Record<string, BulletLegendItemInterface> = {
       <div class="flex flex-col md:flex-row gap-4">
         <UCard
           class="flex-1"
+          :title="$t('body_sheet.characteristics')"
           :ui="{ body: 'py-2 sm:py-2' }"
         >
-          <template #header>
-            <h2 class="font-semibold tracking-wide text-dimmed uppercase">
-              {{ $t('body_sheet.characteristics') }}
-            </h2>
-          </template>
           <div class="divide-y divide-default">
             <div
               v-for="characteristic in characteristics"
@@ -264,13 +260,9 @@ const categories: Record<string, BulletLegendItemInterface> = {
         </UCard>
         <UCard
           class="flex flex-1 flex-col"
+          :title="$t('body_sheet.profile')"
           :ui="{ body: 'flex flex-1 flex-col p-0 sm:p-0' }"
         >
-          <template #header>
-            <h2 class="font-semibold tracking-wide text-dimmed uppercase">
-              {{ $t('body_sheet.profile') }}
-            </h2>
-          </template>
           <div
             class="min-h-0 flex-1 [&_.vue-chrts]:h-full [&_.vcharts-responsive-container]:h-full!"
           >

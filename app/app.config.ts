@@ -10,6 +10,11 @@ export default defineAppConfig({
       stardust: 'indigo',
       earth: 'brown'
     },
+    card: {
+      slots: {
+        title: 'font-semibold tracking-wide text-dimmed uppercase'
+      }
+    },
     pageHero: {
       slots: {
         title: 'font-display'
