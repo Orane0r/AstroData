@@ -1,7 +1,7 @@
 import { celestialBodies } from 'hub:db:schema'
 import { db } from 'hub:db'
 import { eq } from 'drizzle-orm'
-import { fetchWikipediaDescription } from '../../../services/wikipedia'
+import { fetchWikipediaDescription } from '~~/server/services/wikipedia'
 import { z } from 'zod'
 
 const querySchema = z.object({
