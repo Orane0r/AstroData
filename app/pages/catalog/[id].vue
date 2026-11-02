@@ -220,7 +220,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
             v-if="body?.wikipedia"
             :to="body.wikipedia"
             target="_blank"
-            class="inline-flex items-center gap-1 text-sm text-primary"
+            class="mt-auto inline-flex items-center gap-1 text-sm text-primary"
           >
             {{ $t('body_sheet.wikipedia') }}
           </ULink>
