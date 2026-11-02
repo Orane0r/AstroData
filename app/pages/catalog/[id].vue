@@ -168,7 +168,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
   <UPage>
     <UPageBody>
       <UBreadcrumb :items="items" />
-      <div class="flex flex-row gap-4">
+      <div class="flex flex-col md:flex-row gap-4">
         <div class="flex-1 min-h-50">
           <!-- TODO bouton 3d + vue 3d -->
           <UModal
@@ -226,7 +226,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
           </ULink>
         </div>
       </div>
-      <div class="flex flex-row gap-4">
+      <div class="flex flex-col md:flex-row gap-4">
         <UCard
           class="flex-1"
           :ui="{ body: 'py-2 sm:py-2' }"
