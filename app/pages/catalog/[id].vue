@@ -348,16 +348,18 @@ const categories: Record<string, BulletLegendItemInterface> = {
           @retry="imagesRefresh"
         />
 
+        <!-- TODO pagination -->
         <div
           v-else
           class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
         >
-          <!-- TODO UButton, revoir le code -->
-          <button
+          <UButton
             v-for="(image, index) in images"
             :key="`${image.fullsize.url}-${index}`"
-            type="button"
-            class="group relative block aspect-square overflow-hidden rounded-lg bg-elevated focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            color="neutral"
+            variant="ghost"
+            block
+            :ui="{ base: 'group relative aspect-square overflow-hidden rounded-lg bg-elevated p-0' }"
             :title="image.title"
             :aria-label="image.title"
             @click="openImage(index)"
@@ -373,14 +375,14 @@ const categories: Record<string, BulletLegendItemInterface> = {
             >
               {{ image.title }}
             </span>
-          </button>
+          </UButton>
         </div>
       </UCard>
 
       <UModal
         v-model:open="isGalleryDialogOpened"
         :title="selectedImage?.title"
-        :ui="{ content: 'sm:max-w-4xl' }"
+        :ui="{ content: 'sm:max-w-4xl', footer: 'justify-between' }"
       >
         <template #body>
           <div
@@ -410,14 +412,12 @@ const categories: Record<string, BulletLegendItemInterface> = {
         </template>
 
         <template #footer>
-          <div
-            v-if="selectedImage"
-            class="flex w-full items-center justify-between gap-2"
-          >
+          <template v-if="selectedImage">
             <UButton
-              icon="i-lucide-chevron-left"
+              icon="i-lucide-arrow-left"
               color="neutral"
               variant="ghost"
+              square
               :aria-label="$t('body_sheet.previous_image')"
               @click="showAdjacentImage(-1)"
             />
@@ -425,13 +425,14 @@ const categories: Record<string, BulletLegendItemInterface> = {
               {{ (selectedImageIndex ?? 0) + 1 }} / {{ images?.length ?? 0 }}
             </span>
             <UButton
-              icon="i-lucide-chevron-right"
+              icon="i-lucide-arrow-right"
               color="neutral"
               variant="ghost"
+              square
               :aria-label="$t('body_sheet.next_image')"
               @click="showAdjacentImage(1)"
             />
-          </div>
+          </template>
         </template>
       </UModal>
       <div>missions liées</div>
