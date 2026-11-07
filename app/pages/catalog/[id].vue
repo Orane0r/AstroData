@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { BreadcrumbItem } from '@nuxt/ui'
 
+import { breakpointsTailwind, useBreakpoints, useMounted } from '@vueuse/core'
+
 import { formatNumber } from '~/utils/format-number'
 import { kelvinToCelsius, scientificToValue } from '~~/shared/utils/conversion'
 import { scaleToMax } from '~~/shared/utils/maths'
@@ -48,6 +50,26 @@ const {
 } = await useFetch<CelestialBodyImage[] | null>(
   `/api/celestial-bodies/${route.params.id}/images`
 )
+
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const isMounted = useMounted()
+
+// Keep the gallery skeleton at 3 rows, following the grid's column count.
+const gallerySkeletonCount = computed(() => {
+  if (!isMounted.value) {
+    return 6
+  }
+  if (breakpoints.xl.value) {
+    return 15
+  }
+  if (breakpoints.lg.value) {
+    return 12
+  }
+  if (breakpoints.sm.value) {
+    return 9
+  }
+  return 6
+})
 
 const selectedImageIndex = ref<number | null>(null)
 
@@ -335,7 +357,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
           class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
         >
           <USkeleton
-            v-for="i in 10"
+            v-for="i in gallerySkeletonCount"
             :key="i"
             class="aspect-square rounded-lg"
           />
