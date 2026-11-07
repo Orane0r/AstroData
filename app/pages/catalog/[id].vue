@@ -33,11 +33,59 @@ const { data: averages } = await useFetch<CelestialBodyAverages>(`/api/celestial
   }
 })
 const { data: moons } = await useFetch<CelestialBody[]>(`/api/celestial-bodies/${route.params.id}/moons`)
-// Re-fetched when the locale changes; the API falls back to English when the page has no translation.
 const { data: description } = await useFetch<{ lang: string, extract: string } | null>(
   `/api/celestial-bodies/${route.params.id}/description`,
-  { query: { lang: locale } }
+  {
+    query: { lang: locale },
+    watch: [locale]
+  }
 )
+const {
+  data: images,
+  status: imagesStatus,
+  error: imagesError,
+  refresh: imagesRefresh
+} = await useFetch<CelestialBodyImage[] | null>(
+  `/api/celestial-bodies/${route.params.id}/images`
+)
+
+const selectedImageIndex = ref<number | null>(null)
+
+const selectedImage = computed(() => {
+  if (selectedImageIndex.value === null) {
+    return null
+  }
+  return images.value?.[selectedImageIndex.value] ?? null
+})
+
+const isGalleryDialogOpened = computed({
+  get: () => selectedImage.value !== null,
+  set: (open) => {
+    if (!open) {
+      selectedImageIndex.value = null
+    }
+  }
+})
+
+function openImage(index: number) {
+  selectedImageIndex.value = index
+}
+
+function showAdjacentImage(offset: number) {
+  const total = images.value?.length ?? 0
+  if (!total || selectedImageIndex.value === null) {
+    return
+  }
+  selectedImageIndex.value = (selectedImageIndex.value + offset + total) % total
+}
+
+const imageDateFormatter = computed(
+  () => new Intl.DateTimeFormat(locale.value, { dateStyle: 'long' })
+)
+
+function formatImageDate(date: Date | string) {
+  return imageDateFormatter.value.format(new Date(date))
+}
 
 interface Characteristic {
   label: string
@@ -159,7 +207,6 @@ const radarChartData = computed<RadarDatum[]>(() => {
 
 const categories: Record<string, BulletLegendItemInterface> = {
   body: { name: body.value?.name ?? '' },
-  // TODO mettre moyenne des <type> (<nombre d'objets>)
   average: { name: t('radar.average', { type: BODY_TYPE_CONFIG[body.value!.type].pluralLabel.toLocaleLowerCase() }) }
 }
 </script>
@@ -283,8 +330,110 @@ const categories: Record<string, BulletLegendItemInterface> = {
       <UCard
         :title="$t('body_sheet.gallery')"
       >
-        galerie
+        <div
+          v-if="imagesStatus === 'pending'"
+          class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+        >
+          <USkeleton
+            v-for="i in 10"
+            :key="i"
+            class="aspect-square rounded-lg"
+          />
+        </div>
+
+        <EmptyState
+          v-else-if="!images?.length"
+          :status="imagesStatus"
+          :error="imagesError"
+          @retry="imagesRefresh"
+        />
+
+        <div
+          v-else
+          class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+        >
+          <!-- TODO UButton, revoir le code -->
+          <button
+            v-for="(image, index) in images"
+            :key="`${image.fullsize.url}-${index}`"
+            type="button"
+            class="group relative block aspect-square overflow-hidden rounded-lg bg-elevated focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            :title="image.title"
+            :aria-label="image.title"
+            @click="openImage(index)"
+          >
+            <img
+              :src="image.thumbnail.url"
+              :alt="image.title"
+              loading="lazy"
+              class="size-full object-cover transition duration-300 group-hover:scale-105"
+            >
+            <span
+              class="absolute inset-x-0 bottom-0 line-clamp-2 bg-gradient-to-t from-black/80 to-transparent p-2 text-left text-xs font-medium text-white opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100"
+            >
+              {{ image.title }}
+            </span>
+          </button>
+        </div>
       </UCard>
+
+      <UModal
+        v-model:open="isGalleryDialogOpened"
+        :title="selectedImage?.title"
+        :ui="{ content: 'sm:max-w-4xl' }"
+      >
+        <template #body>
+          <div
+            v-if="selectedImage"
+            class="space-y-4"
+          >
+            <div class="flex max-h-[70vh] items-center justify-center overflow-hidden rounded-lg bg-elevated">
+              <img
+                :src="selectedImage.fullsize.url"
+                :alt="selectedImage.title"
+                class="max-h-[70vh] w-auto max-w-full object-contain"
+              >
+            </div>
+            <p
+              v-if="selectedImage.description"
+              class="max-h-40 overflow-y-auto text-sm text-muted whitespace-pre-line"
+            >
+              {{ selectedImage.description }}
+            </p>
+            <p
+              v-if="selectedImage.date"
+              class="text-xs text-dimmed"
+            >
+              {{ formatImageDate(selectedImage.date) }}
+            </p>
+          </div>
+        </template>
+
+        <template #footer>
+          <div
+            v-if="selectedImage"
+            class="flex w-full items-center justify-between gap-2"
+          >
+            <UButton
+              icon="i-lucide-chevron-left"
+              color="neutral"
+              variant="ghost"
+              :aria-label="$t('body_sheet.previous_image')"
+              @click="showAdjacentImage(-1)"
+            />
+            <span class="text-sm tabular-nums text-muted">
+              {{ (selectedImageIndex ?? 0) + 1 }} / {{ images?.length ?? 0 }}
+            </span>
+            <UButton
+              icon="i-lucide-chevron-right"
+              color="neutral"
+              variant="ghost"
+              :aria-label="$t('body_sheet.next_image')"
+              @click="showAdjacentImage(1)"
+            />
+          </div>
+        </template>
+      </UModal>
       <div>missions liées</div>
       <div>objets liés (à voir)</div>
     </UPageBody>
