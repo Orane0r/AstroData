@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { BreadcrumbItem } from '@nuxt/ui'
 
+import { breakpointsTailwind, useBreakpoints, useMounted } from '@vueuse/core'
+
 import { formatNumber } from '~/utils/format-number'
 import { kelvinToCelsius, scientificToValue } from '~~/shared/utils/conversion'
 import { scaleToMax } from '~~/shared/utils/maths'
@@ -23,21 +25,92 @@ const { t, locale } = useI18n()
 
 const BODY_TYPE_CONFIG = useBodyTypeConfig()
 
+// TODO composable pour gérer la pagination sur les différentes pages ?
+// TODO voir comment gérer le cas où on prend la pagination par défaut côté serveur
+const page = ref(1)
+const pageSize = ref(20)
+
 const isDialogOpened = ref(false)
 const zoom = ref<PanzoomImage | null>(null)
 
 const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
-const { data: averages } = await useFetch<CelestialBodyAverages>(`/api/celestial-bodies/averages`, {
+const { data: averages } = await useFetch(`/api/celestial-bodies/averages`, {
   query: {
     type: body.value?.type
   }
 })
 const { data: moons } = await useFetch<CelestialBody[]>(`/api/celestial-bodies/${route.params.id}/moons`)
-// Re-fetched when the locale changes; the API falls back to English when the page has no translation.
 const { data: description } = await useFetch<{ lang: string, extract: string } | null>(
   `/api/celestial-bodies/${route.params.id}/description`,
-  { query: { lang: locale } }
+  {
+    query: { lang: locale },
+    watch: [locale]
+  }
 )
+const {
+  data: images,
+  status: imagesStatus,
+  error: imagesError,
+  refresh: imagesRefresh
+} = await useFetch<PaginatedApiResult<CelestialBodyImage>>(
+  `/api/celestial-bodies/${route.params.id}/images`, {
+    query: {
+      page,
+      pageSize
+    },
+    watch: [page, pageSize]
+  }
+)
+
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const isMounted = useMounted()
+
+// Keep the gallery skeleton at 3 rows, following the grid's column count.
+const gallerySkeletonCount = computed(() => {
+  if (!isMounted.value) {
+    return 6
+  }
+  if (breakpoints.xl.value) {
+    return 15
+  }
+  if (breakpoints.lg.value) {
+    return 12
+  }
+  if (breakpoints.sm.value) {
+    return 9
+  }
+  return 6
+})
+
+const selectedImageIndex = ref<number | null>(null)
+
+const selectedImage = computed(() => {
+  if (selectedImageIndex.value === null) {
+    return null
+  }
+  return images.value?.data?.[selectedImageIndex.value] ?? null
+})
+
+const isGalleryDialogOpened = computed({
+  get: () => selectedImage.value !== null,
+  set: (open) => {
+    if (!open) {
+      selectedImageIndex.value = null
+    }
+  }
+})
+
+function openImage(index: number) {
+  selectedImageIndex.value = index
+}
+
+const imageDateFormatter = computed(
+  () => new Intl.DateTimeFormat(locale.value, { dateStyle: 'long' })
+)
+
+function formatImageDate(date: Date | string) {
+  return imageDateFormatter.value.format(new Date(date))
+}
 
 interface Characteristic {
   label: string
@@ -159,7 +232,6 @@ const radarChartData = computed<RadarDatum[]>(() => {
 
 const categories: Record<string, BulletLegendItemInterface> = {
   body: { name: body.value?.name ?? '' },
-  // TODO mettre moyenne des <type> (<nombre d'objets>)
   average: { name: t('radar.average', { type: BODY_TYPE_CONFIG[body.value!.type].pluralLabel.toLocaleLowerCase() }) }
 }
 </script>
@@ -168,7 +240,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
   <UPage>
     <UPageBody>
       <UBreadcrumb :items="items" />
-      <div class="flex flex-row gap-4">
+      <div class="flex flex-col md:flex-row gap-4">
         <div class="flex-1 min-h-50">
           <!-- TODO bouton 3d + vue 3d -->
           <UModal
@@ -176,6 +248,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
             :title="$t('body_sheet.interactive_view')"
             :ui="{ content: 'sm:max-w-3xl' }"
           >
+            <!-- TODO supprimer la fonctionnalité de zoom et la modale au clic -->
             <NuxtImg
               v-if="body?.imageUrl"
               :src="body.imageUrl"
@@ -220,22 +293,18 @@ const categories: Record<string, BulletLegendItemInterface> = {
             v-if="body?.wikipedia"
             :to="body.wikipedia"
             target="_blank"
-            class="inline-flex items-center gap-1 text-sm text-primary"
+            class="mt-auto inline-flex items-center gap-1 text-sm text-primary"
           >
             {{ $t('body_sheet.wikipedia') }}
           </ULink>
         </div>
       </div>
-      <div class="flex flex-row gap-4">
+      <div class="flex flex-col md:flex-row gap-4">
         <UCard
           class="flex-1"
+          :title="$t('body_sheet.characteristics')"
           :ui="{ body: 'py-2 sm:py-2' }"
         >
-          <template #header>
-            <h2 class="font-semibold tracking-wide text-dimmed uppercase">
-              {{ $t('body_sheet.characteristics') }}
-            </h2>
-          </template>
           <div class="divide-y divide-default">
             <div
               v-for="characteristic in characteristics"
@@ -264,13 +333,9 @@ const categories: Record<string, BulletLegendItemInterface> = {
         </UCard>
         <UCard
           class="flex flex-1 flex-col"
+          :title="$t('body_sheet.profile')"
           :ui="{ body: 'flex flex-1 flex-col p-0 sm:p-0' }"
         >
-          <template #header>
-            <h2 class="font-semibold tracking-wide text-dimmed uppercase">
-              {{ $t('body_sheet.profile') }}
-            </h2>
-          </template>
           <div
             class="min-h-0 flex-1 [&_.vue-chrts]:h-full [&_.vcharts-responsive-container]:h-full!"
           >
@@ -288,7 +353,102 @@ const categories: Record<string, BulletLegendItemInterface> = {
           </div>
         </UCard>
       </div>
-      <div>cadre galerie</div>
+      <UCard
+        :title="$t('body_sheet.gallery')"
+      >
+        <div
+          v-if="imagesStatus === 'pending'"
+          class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+        >
+          <USkeleton
+            v-for="i in gallerySkeletonCount"
+            :key="i"
+            class="aspect-square rounded-lg"
+          />
+        </div>
+
+        <EmptyState
+          v-else-if="!images?.data?.length"
+          :status="imagesStatus"
+          :error="imagesError"
+          @retry="imagesRefresh"
+        />
+
+        <div
+          v-else
+          class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+        >
+          <UButton
+            v-for="(image, index) in images.data"
+            :key="`${image.fullsize.url}-${index}`"
+            color="neutral"
+            variant="ghost"
+            block
+            :ui="{ base: 'group relative aspect-square overflow-hidden rounded-lg bg-elevated p-0' }"
+            :title="image.title"
+            :aria-label="image.title"
+            @click="openImage(index)"
+          >
+            <img
+              :src="image.thumbnail.url"
+              :alt="image.title"
+              loading="lazy"
+              class="size-full object-cover transition duration-300 group-hover:scale-105"
+            >
+            <span
+              class="absolute inset-x-0 bottom-0 line-clamp-2 bg-linear-to-t from-black/80 to-transparent p-2 text-left text-xs font-medium text-white opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100"
+            >
+              {{ image.title }}
+            </span>
+          </UButton>
+        </div>
+
+        <template #footer>
+          <UPagination
+            v-if="imagesStatus === 'success' && (images?.data?.length ?? 0) > 0"
+            v-model:page="page"
+            :total="images?.total"
+            :items-per-page="pageSize"
+            show-edges
+            class="flex justify-center"
+          />
+        </template>
+      </UCard>
+
+      <!-- TODO traduire les descriptions en fonction de la langue -->
+      <!-- TODO des fois la version agrandie affiche une image cassée -->
+      <UModal
+        v-model:open="isGalleryDialogOpened"
+        :title="selectedImage?.title"
+        :ui="{ content: 'sm:max-w-4xl', footer: 'justify-between' }"
+      >
+        <template #body>
+          <div
+            v-if="selectedImage"
+            class="space-y-4"
+          >
+            <div class="flex max-h-[70vh] items-center justify-center overflow-hidden rounded-lg bg-elevated">
+              <img
+                :src="selectedImage.fullsize.url"
+                :alt="selectedImage.title"
+                class="max-h-[70vh] w-auto max-w-full object-contain"
+              >
+            </div>
+            <p
+              v-if="selectedImage.description"
+              class="max-h-40 overflow-y-auto text-sm text-muted whitespace-pre-line"
+            >
+              {{ selectedImage.description }}
+            </p>
+            <p
+              v-if="selectedImage.date"
+              class="text-xs text-dimmed"
+            >
+              {{ formatImageDate(selectedImage.date) }}
+            </p>
+          </div>
+        </template>
+      </UModal>
       <div>missions liées</div>
       <div>objets liés (à voir)</div>
     </UPageBody>
