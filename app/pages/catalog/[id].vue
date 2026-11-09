@@ -93,14 +93,6 @@ function openImage(index: number) {
   selectedImageIndex.value = index
 }
 
-function showAdjacentImage(offset: number) {
-  const total = images.value?.length ?? 0
-  if (!total || selectedImageIndex.value === null) {
-    return
-  }
-  selectedImageIndex.value = (selectedImageIndex.value + offset + total) % total
-}
-
 const imageDateFormatter = computed(
   () => new Intl.DateTimeFormat(locale.value, { dateStyle: 'long' })
 )
@@ -245,6 +237,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
             :title="$t('body_sheet.interactive_view')"
             :ui="{ content: 'sm:max-w-3xl' }"
           >
+            <!-- TODO supprimer la fonctionnalité de zoom et la modale au clic -->
             <NuxtImg
               v-if="body?.imageUrl"
               :src="body.imageUrl"
@@ -401,6 +394,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
         </div>
       </UCard>
 
+      <!-- TODO traduire les descriptions en fonction de la langue -->
       <UModal
         v-model:open="isGalleryDialogOpened"
         :title="selectedImage?.title"
@@ -431,30 +425,6 @@ const categories: Record<string, BulletLegendItemInterface> = {
               {{ formatImageDate(selectedImage.date) }}
             </p>
           </div>
-        </template>
-
-        <template #footer>
-          <template v-if="selectedImage">
-            <UButton
-              icon="i-lucide-arrow-left"
-              color="neutral"
-              variant="ghost"
-              square
-              :aria-label="$t('body_sheet.previous_image')"
-              @click="showAdjacentImage(-1)"
-            />
-            <span class="text-sm tabular-nums text-muted">
-              {{ (selectedImageIndex ?? 0) + 1 }} / {{ images?.length ?? 0 }}
-            </span>
-            <UButton
-              icon="i-lucide-arrow-right"
-              color="neutral"
-              variant="ghost"
-              square
-              :aria-label="$t('body_sheet.next_image')"
-              @click="showAdjacentImage(1)"
-            />
-          </template>
         </template>
       </UModal>
       <div>missions liées</div>
