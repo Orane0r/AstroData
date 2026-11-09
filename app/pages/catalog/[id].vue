@@ -8,12 +8,6 @@ import { kelvinToCelsius, scientificToValue } from '~~/shared/utils/conversion'
 import { scaleToMax } from '~~/shared/utils/maths'
 import { useBodyTypeConfig } from '../../utils/body-config.ts'
 
-interface PanzoomImage extends HTMLImageElement {
-  panzoom?: {
-    zoomWithWheel: (event: WheelEvent) => void
-  }
-}
-
 type RadarDatum = {
   metric: string
   body: number
@@ -31,7 +25,6 @@ const page = ref(1)
 const pageSize = ref(20)
 
 const isDialogOpened = ref(false)
-const zoom = ref<PanzoomImage | null>(null)
 
 const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
 const { data: averages } = await useFetch(`/api/celestial-bodies/averages`, {
@@ -190,17 +183,6 @@ const items = ref<BreadcrumbItem[]>([
   }
 ])
 
-function handleImageWheel(event: WheelEvent) {
-  zoom.value?.panzoom?.zoomWithWheel(event)
-}
-
-function handlePanzoomChange(event: Event) {
-  const { scale } = (event as CustomEvent<{ scale: number }>).detail
-  if (zoom.value) {
-    zoom.value.style.cursor = scale > 1.001 ? 'grab' : 'zoom-in'
-  }
-}
-
 // Each metric is scaled on its own: the larger of (body, average) = 100.
 // `decades` = log scale for metrics spanning several orders of magnitude.
 const radarChartData = computed<RadarDatum[]>(() => {
@@ -243,39 +225,14 @@ const categories: Record<string, BulletLegendItemInterface> = {
       <div class="flex flex-col md:flex-row gap-4">
         <div class="flex-1 min-h-50">
           <!-- TODO bouton 3d + vue 3d -->
-          <UModal
-            v-model:open="isDialogOpened"
-            :title="$t('body_sheet.interactive_view')"
-            :ui="{ content: 'sm:max-w-3xl' }"
-          >
-            <!-- TODO supprimer la fonctionnalité de zoom et la modale au clic -->
-            <NuxtImg
-              v-if="body?.imageUrl"
-              :src="body.imageUrl"
-              :alt="body.name"
-              fit="contain"
-              class="rounded-xl cursor-pointer"
-              @click="isDialogOpened = true"
-            />
-
-            <template #body>
-              <div
-                class="overflow-hidden rounded-xl"
-                @wheel.prevent="handleImageWheel"
-              >
-                <img
-                  v-if="body?.imageUrl"
-                  ref="zoom"
-                  v-panzoom="{ contain: 'outside', cursor: 'zoom-in' }"
-                  :src="body.imageUrl"
-                  :alt="body.name"
-                  fit="contain"
-                  class="w-full h-auto"
-                  @panzoomchange="handlePanzoomChange"
-                >
-              </div>
-            </template>
-          </UModal>
+          <NuxtImg
+            v-if="body?.imageUrl"
+            :src="body.imageUrl"
+            :alt="body.name"
+            fit="contain"
+            class="rounded-xl"
+            @click="isDialogOpened = true"
+          />
         </div>
         <div class="flex-2 min-h-50 flex flex-col gap-4">
           <h1 class="text-3xl  sm:text-4xl font-bold text-highlighted">
