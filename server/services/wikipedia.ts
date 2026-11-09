@@ -54,6 +54,7 @@ export async function fetchWikipediaImageUrl(
  * @param url English Wikipedia URL of the page.
  * @param lang Wanted language (ISO 639-1 code).
  */
+// TODO créer une interface pour le retour et typer le retour de l'api qui appelle cette fonction
 export async function fetchWikipediaDescription(
   url: string,
   lang: string

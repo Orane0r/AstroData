@@ -33,13 +33,13 @@ const pageSize = ref(20)
 const isDialogOpened = ref(false)
 const zoom = ref<PanzoomImage | null>(null)
 
-const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
-const { data: averages } = await useFetch<CelestialBodyAverages>(`/api/celestial-bodies/averages`, {
+const { data: body } = await useFetch(`/api/celestial-bodies/${route.params.id}`)
+const { data: averages } = await useFetch(`/api/celestial-bodies/averages`, {
   query: {
     type: body.value?.type
   }
 })
-const { data: moons } = await useFetch<CelestialBody[]>(`/api/celestial-bodies/${route.params.id}/moons`)
+const { data: moons } = await useFetch(`/api/celestial-bodies/${route.params.id}/moons`)
 const { data: description } = await useFetch<{ lang: string, extract: string } | null>(
   `/api/celestial-bodies/${route.params.id}/description`,
   {
@@ -52,7 +52,7 @@ const {
   status: imagesStatus,
   error: imagesError,
   refresh: imagesRefresh
-} = await useFetch<PaginatedApiResult<CelestialBodyImage>>(
+} = await useFetch(
   `/api/celestial-bodies/${route.params.id}/images`, {
     query: {
       page,
