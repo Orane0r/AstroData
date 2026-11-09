@@ -396,7 +396,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
               class="size-full object-cover transition duration-300 group-hover:scale-105"
             >
             <span
-              class="absolute inset-x-0 bottom-0 line-clamp-2 bg-gradient-to-t from-black/80 to-transparent p-2 text-left text-xs font-medium text-white opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100"
+              class="absolute inset-x-0 bottom-0 line-clamp-2 bg-linear-to-t from-black/80 to-transparent p-2 text-left text-xs font-medium text-white opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100"
             >
               {{ image.title }}
             </span>
