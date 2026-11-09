@@ -416,6 +416,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
       </UCard>
 
       <!-- TODO traduire les descriptions en fonction de la langue -->
+      <!-- TODO des fois la version agrandie affiche une image cassée -->
       <UModal
         v-model:open="isGalleryDialogOpened"
         :title="selectedImage?.title"
