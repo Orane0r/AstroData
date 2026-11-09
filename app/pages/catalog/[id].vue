@@ -25,6 +25,11 @@ const { t, locale } = useI18n()
 
 const BODY_TYPE_CONFIG = useBodyTypeConfig()
 
+// TODO composable pour gérer la pagination sur les différentes pages ?
+// TODO voir comment gérer le cas où on prend la pagination par défaut côté serveur
+const page = ref(1)
+const pageSize = ref(20)
+
 const isDialogOpened = ref(false)
 const zoom = ref<PanzoomImage | null>(null)
 
@@ -47,8 +52,14 @@ const {
   status: imagesStatus,
   error: imagesError,
   refresh: imagesRefresh
-} = await useFetch<CelestialBodyImage[] | null>(
-  `/api/celestial-bodies/${route.params.id}/images`
+} = await useFetch<PaginatedApiResult<CelestialBodyImage>>(
+  `/api/celestial-bodies/${route.params.id}/images`, {
+    query: {
+      page,
+      pageSize
+    },
+    watch: [page, pageSize]
+  }
 )
 
 const breakpoints = useBreakpoints(breakpointsTailwind)
@@ -77,7 +88,7 @@ const selectedImage = computed(() => {
   if (selectedImageIndex.value === null) {
     return null
   }
-  return images.value?.[selectedImageIndex.value] ?? null
+  return images.value?.data?.[selectedImageIndex.value] ?? null
 })
 
 const isGalleryDialogOpened = computed({
@@ -357,19 +368,18 @@ const categories: Record<string, BulletLegendItemInterface> = {
         </div>
 
         <EmptyState
-          v-else-if="!images?.length"
+          v-else-if="!images?.data?.length"
           :status="imagesStatus"
           :error="imagesError"
           @retry="imagesRefresh"
         />
 
-        <!-- TODO pagination -->
         <div
           v-else
           class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
         >
           <UButton
-            v-for="(image, index) in images"
+            v-for="(image, index) in images.data"
             :key="`${image.fullsize.url}-${index}`"
             color="neutral"
             variant="ghost"
@@ -392,6 +402,17 @@ const categories: Record<string, BulletLegendItemInterface> = {
             </span>
           </UButton>
         </div>
+
+        <template #footer>
+          <UPagination
+            v-if="imagesStatus === 'success' && (images?.data?.length ?? 0) > 0"
+            v-model:page="page"
+            :total="images?.total"
+            :items-per-page="pageSize"
+            show-edges
+            class="flex justify-center"
+          />
+        </template>
       </UCard>
 
       <!-- TODO traduire les descriptions en fonction de la langue -->
