@@ -1,10 +1,10 @@
 import { and, asc, count, inArray, like } from 'drizzle-orm'
 
 import { CELESTIAL_BODY_TYPES } from '~~/shared/constants/db'
+import { DEFAULT_PAGE_SIZE } from '~~/shared/constants/page'
 import type { PaginatedApiResult } from '~~/shared/types/api'
 import { SQL_ORDER_BODY_TYPE } from '~~/server/utils/sql'
 import { celestialBodies } from '~~/server/db/schema'
-import { db } from 'hub:db'
 import { transformIntoArray } from '~~/server/utils/transform'
 import z from 'zod'
 
@@ -15,7 +15,7 @@ const querySchema = z.object({
   ),
   search: z.coerce.string().toLowerCase().optional(),
   page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(100).default(20)
+  pageSize: z.coerce.number().int().min(1).max(100).default(DEFAULT_PAGE_SIZE)
 })
 
 export default defineEventHandler(async (event): Promise<PaginatedApiResult<CelestialBody>> => {

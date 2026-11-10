@@ -15,24 +15,21 @@ const selectedTypes = ref<CelestialBodyType[]>(['Moon', 'Planet'])
 const search = ref('')
 const debouncedSearch = refDebounced(search, 300)
 
-const page = ref(1)
-const pageSize = ref(15)
-
 const { data: count, pending: countLoading } = await useFetch('/api/celestial-bodies/count')
 const {
   data: bodiesResult,
+  page,
+  pageSize,
   pending: bodiesLoading,
   status: bodiesStatus,
   error: bodiesError,
   refresh: bodiesRefresh
-} = await useFetch('/api/celestial-bodies', {
+} = await usePaginationFetch<CelestialBody>('/api/celestial-bodies', {
   query: {
     types: selectedTypes,
-    search: debouncedSearch,
-    page,
-    pageSize
+    search: debouncedSearch
   },
-  watch: [selectedTypes, debouncedSearch, page, pageSize]
+  watch: [selectedTypes, debouncedSearch]
 })
 
 const bodies = computed(() => bodiesResult.value?.data ?? [])
@@ -163,7 +160,7 @@ const onClickType = (type: CelestialBodyType) => {
 }
 
 const onClickRow = (row: TableRow<CelestialBody>) => {
-  const bodyId = bodiesResult.value?.data[Number.parseInt(row.id)]!.id
+  const bodyId = bodies.value[Number.parseInt(row.id)]!.id
   navigateTo(`/catalog/${bodyId}`)
 }
 </script>

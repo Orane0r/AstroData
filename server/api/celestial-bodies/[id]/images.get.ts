@@ -1,4 +1,5 @@
 import type { CelestialBodyImage } from '~~/shared/types/api'
+import { DEFAULT_PAGE_SIZE } from '~~/shared/constants/page'
 import { celestialBodies } from 'hub:db:schema'
 import { db } from 'hub:db'
 import { eq } from 'drizzle-orm'
@@ -9,7 +10,7 @@ import z from 'zod'
 // TODO créer un schéma à part pour ça car réutilisé dans index.get.ts
 const querySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(100).default(20)
+  pageSize: z.coerce.number().int().min(1).max(100).default(DEFAULT_PAGE_SIZE)
 })
 
 export default defineCachedEventHandler(async (event): Promise<PaginatedApiResult<CelestialBodyImage>> => {

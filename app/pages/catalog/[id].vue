@@ -19,11 +19,6 @@ const { t, locale } = useI18n()
 
 const BODY_TYPE_CONFIG = useBodyTypeConfig()
 
-// TODO composable pour gérer la pagination sur les différentes pages ?
-// TODO voir comment gérer le cas où on prend la pagination par défaut côté serveur
-const page = ref(1)
-const pageSize = ref(20)
-
 const isDialogOpened = ref(false)
 
 const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
@@ -42,17 +37,13 @@ const { data: description } = await useFetch<{ lang: string, extract: string } |
 )
 const {
   data: images,
+  page,
+  pageSize,
   status: imagesStatus,
   error: imagesError,
   refresh: imagesRefresh
-} = await useFetch<PaginatedApiResult<CelestialBodyImage>>(
-  `/api/celestial-bodies/${route.params.id}/images`, {
-    query: {
-      page,
-      pageSize
-    },
-    watch: [page, pageSize]
-  }
+} = await usePaginationFetch<CelestialBodyImage>(
+  `/api/celestial-bodies/${route.params.id}/images`
 )
 
 const breakpoints = useBreakpoints(breakpointsTailwind)
@@ -361,6 +352,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
         </div>
 
         <template #footer>
+          <!-- TODO ne pas afficher s'il n'y a qu'une page ? -->
           <UPagination
             v-if="imagesStatus === 'success' && (images?.data?.length ?? 0) > 0"
             v-model:page="page"
