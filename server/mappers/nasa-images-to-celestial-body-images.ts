@@ -1,5 +1,6 @@
-import type { CelestialBodyImage } from '~~/shared/types/api'
 import type { Item, NasaGallery } from '../types/nasa-gallery'
+
+import type { CelestialBodyImage } from '~~/shared/types/api'
 
 /**
  * Turns a NASA image search result into clean data ready to be displayed.
@@ -30,7 +31,7 @@ function mapItem(item: Item): CelestialBodyImage | null {
       width: preview.width ?? 0,
       height: preview.height ?? 0
     },
-    fullsize: {
+    fullSize: {
       url: canonical.href,
       width: canonical.width ?? 0,
       height: canonical.height ?? 0

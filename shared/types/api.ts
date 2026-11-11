@@ -21,7 +21,7 @@ export type CelestialBodyImage = {
   description: string
   date: Date
   thumbnail: Image
-  fullsize: Image
+  fullSize: Image
 }
 
 type Image = {

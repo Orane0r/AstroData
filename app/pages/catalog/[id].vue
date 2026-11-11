@@ -332,7 +332,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
         >
           <UButton
             v-for="(image, index) in images.data"
-            :key="`${image.fullsize.url}-${index}`"
+            :key="index"
             color="neutral"
             variant="ghost"
             block
@@ -341,12 +341,12 @@ const categories: Record<string, BulletLegendItemInterface> = {
             :aria-label="image.title"
             @click="openImage(index)"
           >
-            <img
+            <NuxtImg
               :src="image.thumbnail.url"
               :alt="image.title"
               loading="lazy"
               class="size-full object-cover transition duration-300 group-hover:scale-105"
-            >
+            />
             <span
               class="absolute inset-x-0 bottom-0 line-clamp-2 bg-linear-to-t from-black/80 to-transparent p-2 text-left text-xs font-medium text-white opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100"
             >
@@ -381,11 +381,11 @@ const categories: Record<string, BulletLegendItemInterface> = {
             class="space-y-4"
           >
             <div class="flex max-h-[70vh] items-center justify-center overflow-hidden rounded-lg bg-elevated">
-              <img
-                :src="selectedImage.fullsize.url"
+              <NuxtImg
+                :src="selectedImage.fullSize.url"
                 :alt="selectedImage.title"
                 class="max-h-[70vh] w-auto max-w-full object-contain"
-              >
+              />
             </div>
             <p
               v-if="selectedImage.description"
