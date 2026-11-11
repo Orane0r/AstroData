@@ -79,5 +79,17 @@
   },
   "footer": {
     "developed_by": "Developed by Orane Orveillon"
+  },
+  "database": {
+    "seeding": {
+      "title": "Updating the database",
+      "description": "Astronomical data is being updated after a migration. This may take a few minutes.",
+      "starting": "Preparing the update...",
+      "progress": "{done} / {total} objects processed"
+    },
+    "error": {
+      "title": "Database update failed",
+      "retry": "Retry"
+    }
   }
 }

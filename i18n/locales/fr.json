@@ -81,5 +81,17 @@
   },
   "footer": {
     "developed_by": "Développé par Orane Orveillon"
+  },
+  "database": {
+    "seeding": {
+      "title": "Mise à jour de la base de données",
+      "description": "Les données astronomiques sont en cours de mise à jour après une migration. Cette opération peut prendre quelques minutes.",
+      "starting": "Préparation de la mise à jour...",
+      "progress": "{done} / {total} objets traités"
+    },
+    "error": {
+      "title": "Échec de la mise à jour de la base de données",
+      "retry": "Réessayer"
+    }
   }
 }

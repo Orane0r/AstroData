@@ -14,6 +14,7 @@ useHead({
 })
 
 const { t } = useI18n()
+const { isDatabaseReady } = useDatabaseSeed()
 
 const title = 'AstroData'
 const description = 'A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours.'
@@ -45,66 +46,70 @@ const items = ref<NavigationMenuItem[]>([
 
 <template>
   <UApp>
-    <UHeader>
-      <template #left>
-        <NuxtLink to="/">
-          <AppLogo class="w-auto h-6 shrink-0" />
-        </NuxtLink>
+    <template v-if="isDatabaseReady">
+      <UHeader>
+        <template #left>
+          <NuxtLink to="/">
+            <AppLogo class="w-auto h-6 shrink-0" />
+          </NuxtLink>
 
-        <UNavigationMenu
-          :items="items"
-          variant="link"
-          class="pl-10"
-          color="neutral"
-        />
-      </template>
+          <UNavigationMenu
+            :items="items"
+            variant="link"
+            class="pl-10"
+            color="neutral"
+          />
+        </template>
 
-      <template #right>
-        <UButton
-          to="https://github.com/Orane0r/AstroData"
-          target="_blank"
-          icon="i-simple-icons-github"
-          aria-label="GitHub"
-          color="neutral"
-          variant="ghost"
-        />
-      </template>
-    </UHeader>
+        <template #right>
+          <UButton
+            to="https://github.com/Orane0r/AstroData"
+            target="_blank"
+            icon="i-simple-icons-github"
+            aria-label="GitHub"
+            color="neutral"
+            variant="ghost"
+          />
+        </template>
+      </UHeader>
 
-    <UMain>
-      <UContainer class="max-w-350">
-        <NuxtPage />
-      </UContainer>
-    </UMain>
+      <UMain>
+        <UContainer class="max-w-350">
+          <NuxtPage />
+        </UContainer>
+      </UMain>
 
-    <USeparator />
+      <USeparator />
 
-    <UFooter>
-      <template #left>
-        <p class="text-sm text-muted">
-          {{ $t('footer.developed_by') }}
-        </p>
-      </template>
+      <UFooter>
+        <template #left>
+          <p class="text-sm text-muted">
+            {{ $t('footer.developed_by') }}
+          </p>
+        </template>
 
-      <template #right>
-        <UButton
-          to="https://www.linkedin.com/in/orane-orveillon-9aab7a1b7"
-          target="_blank"
-          icon="i-simple-icons-linkedin"
-          aria-label="LinkedIn"
-          color="neutral"
-          variant="ghost"
-        />
-        <UButton
-          to="https://github.com/Orane0r"
-          target="_blank"
-          icon="i-simple-icons-github"
-          aria-label="GitHub"
-          color="neutral"
-          variant="ghost"
-        />
-      </template>
-      <!-- TODO ajouter une rubrique contact ? pour suggérer une modif/relever un bug -->
-    </UFooter>
+        <template #right>
+          <UButton
+            to="https://www.linkedin.com/in/orane-orveillon-9aab7a1b7"
+            target="_blank"
+            icon="i-simple-icons-linkedin"
+            aria-label="LinkedIn"
+            color="neutral"
+            variant="ghost"
+          />
+          <UButton
+            to="https://github.com/Orane0r"
+            target="_blank"
+            icon="i-simple-icons-github"
+            aria-label="GitHub"
+            color="neutral"
+            variant="ghost"
+          />
+        </template>
+        <!-- TODO ajouter une rubrique contact ? pour suggérer une modif/relever un bug -->
+      </UFooter>
+    </template>
+
+    <DatabaseSeedOverlay v-else />
   </UApp>
 </template>
