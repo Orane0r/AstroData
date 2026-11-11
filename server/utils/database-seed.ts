@@ -1,6 +1,7 @@
+import { needsSeed, seedDatabase } from '../db/seed'
+
 import type { DatabaseSeedStatus } from '~~/shared/types/database'
 import { consola } from 'consola'
-import { needsSeed, seedDatabase } from '../db/seed'
 
 let status: DatabaseSeedStatus = { state: 'ready' }
 let running: Promise<void> | null = null
@@ -21,13 +22,13 @@ export function isDatabaseSeeding(): boolean {
 export async function checkDatabaseSeed(): Promise<void> {
   // A running seed is polled through `getDatabaseSeedStatus()`; a failed one
   // stays failed until the user explicitly retries.
-  if (running || status.state === 'error') {
+  if (running !== null || status.state === 'error') {
     return
   }
 
   try {
     if (await needsSeed()) {
-      startDatabaseSeed()
+      void startDatabaseSeed()
     } else if (status.state !== 'ready') {
       // The schema was not migrated yet on a previous check: it is now.
       status = { state: 'ready' }
@@ -46,7 +47,7 @@ export async function checkDatabaseSeed(): Promise<void> {
 }
 
 export function startDatabaseSeed(): Promise<void> {
-  if (running) {
+  if (running !== null) {
     return running
   }
 
@@ -71,16 +72,16 @@ export function startDatabaseSeed(): Promise<void> {
 }
 
 export function retryDatabaseSeed(): void {
-  if (running) {
+  if (running !== null) {
     return
   }
 
   status = { state: 'ready' }
-  startDatabaseSeed()
+  void startDatabaseSeed()
 }
 
 function setError(error: unknown) {
-  const message = error instanceof Error ? error.message : String(error)
+  const message = error instanceof Error ? error.message : 'Unknown error'
   consola.error('Failed to seed the database:', error)
   status = { state: 'error', error: message }
 }
