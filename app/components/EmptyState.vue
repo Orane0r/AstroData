@@ -18,7 +18,7 @@ const emit = defineEmits<{ retry: [] }>()
   >
     <template #actions>
       <UButton
-        :label="$t('state.retry')"
+        :label="$t('buttons.retry')"
         icon="i-solar-refresh-outline"
         @click="emit('retry')"
       />

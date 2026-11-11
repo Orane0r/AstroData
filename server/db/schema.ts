@@ -53,3 +53,14 @@ export const celestialBodiesRelations = relations(celestialBodies, ({ one, many 
     relationName: 'parent'
   })
 }))
+
+/**
+ * Tracks the migration (and seed data version) the database was last seeded with.
+ * Used to re-seed automatically after a migration.
+ */
+export const seedState = sqliteTable('seed_state', {
+  id: int().primaryKey(),
+  lastMigration: text().notNull(),
+  seedVersion: int().notNull(),
+  seededAt: int().notNull()
+})

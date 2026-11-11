@@ -2,8 +2,11 @@
   "hero": {
     "title": "The cosmos,",
     "title2": "in data.",
-    "subtitle": "Explore and compare objects in our universe.",
-    "get_started": "Get started"
+    "subtitle": "Explore and compare objects in our universe."
+  },
+  "buttons": {
+    "get_started": "Get started",
+    "retry": "Retry"
   },
   "menus": {
     "catalog": "Catalog",
@@ -74,10 +77,20 @@
   "state": {
     "no_data": "No data",
     "error_code": "Error {code}",
-    "error_message": "Unable to load the data.",
-    "retry": "Retry"
+    "error_message": "Unable to load the data."
   },
   "footer": {
     "developed_by": "Developed by Orane Orveillon"
+  },
+  "database": {
+    "seeding": {
+      "title": "Updating the data",
+      "description": "Astronomical data is being updated. This may take a few minutes.",
+      "starting": "Preparing the update...",
+      "progress": "{done} / {total} objects processed"
+    },
+    "error": {
+      "title": "Database update failed"
+    }
   }
 }
