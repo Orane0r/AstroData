@@ -28,7 +28,7 @@ const { data: averages } = await useFetch(`/api/celestial-bodies/averages`, {
   }
 })
 const { data: moons } = await useFetch<CelestialBody[]>(`/api/celestial-bodies/${route.params.id}/moons`)
-const { data: description } = await useFetch<{ lang: string, extract: string } | null>(
+const { data: description, status: descriptionStatus } = await useFetch<{ lang: string, extract: string } | null>(
   `/api/celestial-bodies/${route.params.id}/description`,
   {
     query: { lang: locale },
@@ -229,8 +229,12 @@ const categories: Record<string, BulletLegendItemInterface> = {
           <h1 class="text-3xl  sm:text-4xl font-bold text-highlighted">
             {{ body?.name }}
           </h1>
+          <USkeleton
+            v-if="descriptionStatus === 'pending'"
+            class="h-24 w-full"
+          />
           <p
-            v-if="description"
+            v-else-if="description"
             :lang="description.lang"
             class="text-muted text-justify hyphens-auto"
           >

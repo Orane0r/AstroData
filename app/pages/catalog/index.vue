@@ -159,9 +159,10 @@ const onClickType = (type: CelestialBodyType) => {
   }
 }
 
-const onClickRow = (row: TableRow<CelestialBody>) => {
+// TODO voir si on peut pas mettre l'englishName dans l'url à la place et récupérer d'id autrement (store ?)
+const onClickRow = async (row: TableRow<CelestialBody>) => {
   const bodyId = bodies.value[Number.parseInt(row.id)]!.id
-  navigateTo(`/catalog/${bodyId}`)
+  await navigateTo(`/catalog/${bodyId}`)
 }
 </script>
 
@@ -221,7 +222,6 @@ const onClickRow = (row: TableRow<CelestialBody>) => {
 
       <!-- TODO sorting -->
 
-      <!-- FIXME corriger délais après le clic sur une ligne pour passer à l'étape suivant -->
       <UTable
         :data="bodies"
         :columns
