@@ -8,7 +8,7 @@ const { t } = useI18n()
       :description="t('hero.subtitle')"
       orientation="horizontal"
       :links="[{
-        label: t('hero.get_started'),
+        label: t('buttons.get_started'),
         icon: 'i-solar-rocket-outline',
         to: '/catalog',
         size: 'xl'

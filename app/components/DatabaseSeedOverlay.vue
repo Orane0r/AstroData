@@ -33,7 +33,7 @@ const isStarting = computed(() => (status.value.progress?.total ?? 0) === 0)
         icon="i-lucide-refresh-cw"
         @click="retry"
       >
-        {{ t('database.error.retry') }}
+        {{ t('buttons.retry') }}
       </UButton>
     </template>
 
