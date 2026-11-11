@@ -6,6 +6,8 @@ import type { WikipediaLink } from '../types/wikipedia-link'
 import _ from 'lodash'
 import { consola } from 'consola'
 import { mapSolarSystemBodiesApiToDb } from '../mappers/solar-system-to-db'
+import solarSystemData from '../data/solar_system.json'
+import wikipediaData from '../data/wikipedia.json'
 
 /**
  * Bump this value when `server/data/*.json` changes without a migration,
@@ -25,8 +27,8 @@ type SeedOptions = {
 export async function seedDatabase({ onProgress }: SeedOptions = {}) {
   consola.start('Seeding database...')
 
-  const solarSystem = await readServerAsset<SolarSystem>('solar_system.json')
-  const wikiUrls = await readServerAsset<WikipediaLink[]>('wikipedia.json')
+  const solarSystem = solarSystemData as SolarSystem
+  const wikiUrls = wikipediaData as WikipediaLink[]
   const [bodiesWithoutParent, bodiesWithParent] = _.partition(solarSystem.bodies, body => body.aroundPlanet == null)
   const lastMigration = await getLatestAppliedMigration()
   const total = solarSystem.bodies.length
@@ -121,18 +123,6 @@ export async function getLatestAppliedMigration(): Promise<string | null> {
   )
 
   return row?.name ?? null
-}
-
-async function readServerAsset<T>(filename: string): Promise<T> {
-  const content = await useStorage('assets:data').getItem<T | string>(filename)
-
-  if (!content) {
-    throw new Error(`Missing server asset: ${filename}`)
-  }
-
-  // The dev server-assets driver already parses JSON, while the production
-  // one returns the raw file content.
-  return typeof content === 'string' ? JSON.parse(content) as T : content
 }
 
 function findWikiUrl(wikiImages: WikipediaLink[], body: SolarSystemBodyData): string | null {
