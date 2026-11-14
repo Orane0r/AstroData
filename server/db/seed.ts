@@ -5,7 +5,7 @@ import { db, schema } from '@nuxthub/db'
 import type { WikipediaLink } from '../types/wikipedia-link'
 import _ from 'lodash'
 import { consola } from 'consola'
-import { mapSolarSystemBodiesApiToDb } from '../mappers/solar-system-to-db'
+import { mapSolarSystemBodiesApiToDb, buildSlugMap } from '../mappers/solar-system-to-db'
 import solarSystemData from '../data/solar_system.json'
 import wikipediaData from '../data/wikipedia.json'
 
@@ -13,7 +13,7 @@ import wikipediaData from '../data/wikipedia.json'
  * Bump this value when `server/data/*.json` changes without a migration,
  * to force a re-seed on the next startup.
  */
-export const SEED_DATA_VERSION = 1
+export const SEED_DATA_VERSION = 2
 
 type SeedOptions = {
   onProgress?: (done: number, total: number) => void
@@ -29,6 +29,7 @@ export async function seedDatabase({ onProgress }: SeedOptions = {}) {
 
   const solarSystem = solarSystemData as SolarSystem
   const wikiUrls = wikipediaData as WikipediaLink[]
+  const slugByApiId = buildSlugMap(solarSystem.bodies)
   const [bodiesWithoutParent, bodiesWithParent] = _.partition(solarSystem.bodies, body => body.aroundPlanet == null)
   const lastMigration = await getLatestAppliedMigration()
   const total = solarSystem.bodies.length
@@ -47,7 +48,7 @@ export async function seedDatabase({ onProgress }: SeedOptions = {}) {
     await Array.fromAsync(bodiesWithoutParent, async (body) => {
       const result = await tx
         .insert(schema.celestialBodies)
-        .values(await mapSolarSystemBodiesApiToDb(body, null, findWikiUrl(wikiUrls, body)))
+        .values(await mapSolarSystemBodiesApiToDb(body, null, findWikiUrl(wikiUrls, body), slugByApiId.get(body.id)!))
 
       cachedIds.push({ idDb: Number(result.lastInsertRowid), idApi: body.id })
       advance()
@@ -59,7 +60,7 @@ export async function seedDatabase({ onProgress }: SeedOptions = {}) {
 
       await tx
         .insert(schema.celestialBodies)
-        .values(await mapSolarSystemBodiesApiToDb(body, parentId, findWikiUrl(wikiUrls, body)))
+        .values(await mapSolarSystemBodiesApiToDb(body, parentId, findWikiUrl(wikiUrls, body), slugByApiId.get(body.id)!))
       advance()
     })
 
