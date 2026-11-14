@@ -11,6 +11,7 @@ const emit = defineEmits<{ retry: [] }>()
 </script>
 
 <template>
+  <!-- TODO ajout prop pour texte personnalisé exemple : "aucune image" pour les images de la gallerie -->
   <UEmpty
     v-if="status === 'error'"
     :title="$t('state.error_code', { code: error?.statusCode ?? '' })"

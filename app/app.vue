@@ -108,7 +108,6 @@ const items = ref<NavigationMenuItem[]>([
             variant="ghost"
           />
         </template>
-        <!-- TODO ajouter une rubrique contact ? pour suggérer une modif/relever un bug -->
       </UFooter>
     </template>
 

@@ -372,9 +372,8 @@ const categories: Record<string, BulletLegendItemInterface> = {
         </div>
 
         <template #footer>
-          <!-- TODO ne pas afficher s'il n'y a qu'une page ? -->
           <UPagination
-            v-if="imagesStatus === 'success' && (images?.data?.length ?? 0) > 0"
+            v-if="imagesStatus === 'success' && (images?.data?.length ?? 0) > pageSize"
             v-model:page="page"
             :total="images?.total"
             :items-per-page="pageSize"
@@ -384,7 +383,6 @@ const categories: Record<string, BulletLegendItemInterface> = {
         </template>
       </UCard>
 
-      <!-- TODO traduire les descriptions en fonction de la langue -->
       <!-- TODO des fois la version agrandie affiche une image cassée -->
       <UModal
         v-model:open="isGalleryDialogOpened"
