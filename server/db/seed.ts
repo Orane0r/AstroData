@@ -1,11 +1,11 @@
 import type { SolarSystem, SolarSystemBodyData } from '../types/solar-system'
+import { buildSlugMap, mapSolarSystemBodiesApiToDb } from '../mappers/solar-system-to-db'
 import { count, eq, sql } from 'drizzle-orm'
 import { db, schema } from '@nuxthub/db'
 
 import type { WikipediaLink } from '../types/wikipedia-link'
-import _ from 'lodash'
 import { consola } from 'consola'
-import { mapSolarSystemBodiesApiToDb, buildSlugMap } from '../mappers/solar-system-to-db'
+import { partition } from 'lodash'
 import solarSystemData from '../data/solar_system.json'
 import wikipediaData from '../data/wikipedia.json'
 
@@ -30,7 +30,7 @@ export async function seedDatabase({ onProgress }: SeedOptions = {}) {
   const solarSystem = solarSystemData as SolarSystem
   const wikiUrls = wikipediaData as WikipediaLink[]
   const slugByApiId = buildSlugMap(solarSystem.bodies)
-  const [bodiesWithoutParent, bodiesWithParent] = _.partition(solarSystem.bodies, body => body.aroundPlanet == null)
+  const [bodiesWithoutParent, bodiesWithParent] = partition(solarSystem.bodies, body => body.aroundPlanet == null)
   const lastMigration = await getLatestAppliedMigration()
   const total = solarSystem.bodies.length
   let done = 0
