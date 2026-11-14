@@ -5,7 +5,6 @@ import { db, schema } from '@nuxthub/db'
 
 import type { WikipediaLink } from '../types/wikipedia-link'
 import { consola } from 'consola'
-import { partition } from 'lodash'
 import solarSystemData from '../data/solar_system.json'
 import wikipediaData from '../data/wikipedia.json'
 
@@ -30,7 +29,8 @@ export async function seedDatabase({ onProgress }: SeedOptions = {}) {
   const solarSystem = solarSystemData as SolarSystem
   const wikiUrls = wikipediaData as WikipediaLink[]
   const slugByApiId = buildSlugMap(solarSystem.bodies)
-  const [bodiesWithoutParent, bodiesWithParent] = partition(solarSystem.bodies, body => body.aroundPlanet == null)
+  const bodiesWithoutParent = solarSystem.bodies.filter(body => body.aroundPlanet == null)
+  const bodiesWithParent = solarSystem.bodies.filter(body => body.aroundPlanet != null)
   const lastMigration = await getLatestAppliedMigration()
   const total = solarSystem.bodies.length
   let done = 0
