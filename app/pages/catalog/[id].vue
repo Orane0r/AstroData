@@ -22,13 +22,17 @@ const BODY_TYPE_CONFIG = useBodyTypeConfig()
 const isDialogOpened = ref(false)
 
 const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
-const { data: averages } = await useFetch(`/api/celestial-bodies/averages`, {
-  query: {
-    type: body.value?.type
-  }
-})
-const { data: moons } = await useFetch<CelestialBody[]>(`/api/celestial-bodies/${route.params.id}/moons`)
-const { data: description, status: descriptionStatus } = await useFetch<{ lang: string, extract: string } | null>(
+// Parallel for time saving
+const [{ data: averages }, { data: moons }] = await Promise.all([
+  useFetch('/api/celestial-bodies/averages', {
+    query: {
+      type: body.value?.type
+    }
+  }),
+  useFetch<CelestialBody[]>(`/api/celestial-bodies/${route.params.id}/moons`)
+])
+// Both next fetches use the lazy option, so they only run after the page is rendered and the user can see the skeletons and because they lay on external APIs.
+const { data: description, status: descriptionStatus } = useLazyFetch<{ lang: string, extract: string } | null>(
   `/api/celestial-bodies/${route.params.id}/description`,
   {
     query: { lang: locale },
@@ -43,7 +47,8 @@ const {
   error: imagesError,
   refresh: imagesRefresh
 } = await usePaginationFetch<CelestialBodyImage>(
-  `/api/celestial-bodies/${route.params.id}/images`
+  `/api/celestial-bodies/${route.params.id}/images`,
+  { lazy: true }
 )
 
 const breakpoints = useBreakpoints(breakpointsTailwind)

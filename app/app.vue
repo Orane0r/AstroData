@@ -46,6 +46,8 @@ const items = ref<NavigationMenuItem[]>([
 
 <template>
   <UApp>
+    <NuxtLoadingIndicator color="var(--ui-primary)" />
+
     <template v-if="isDatabaseReady">
       <UHeader>
         <template #left>

@@ -160,7 +160,6 @@ const onClickType = (type: CelestialBodyType) => {
 }
 
 // TODO voir si on peut pas mettre l'englishName dans l'url à la place et récupérer d'id autrement (store ?)
-// FIXME il y a une latence avant de naviguer vers la page de l'objet
 const onClickRow = async (row: TableRow<CelestialBody>) => {
   const bodyId = bodies.value[Number.parseInt(row.id)]!.id
   await navigateTo(`/catalog/${bodyId}`)
