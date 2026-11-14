@@ -40,3 +40,12 @@
     to { transform: rotate(360deg); }
   }
 }
+
+@layer base {
+  /* Restore pointer cursor for buttons (https://ui.nuxt.com/docs/getting-started/theme/design-system#tailwind-css) */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
