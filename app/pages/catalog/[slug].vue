@@ -21,7 +21,16 @@ const BODY_TYPE_CONFIG = useBodyTypeConfig()
 
 const isDialogOpened = ref(false)
 
-const { data: body } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.id}`)
+const { data: body, error: bodyError } = await useFetch<CelestialBody>(`/api/celestial-bodies/${route.params.slug}`)
+
+// Unknown slug (including legacy numeric URLs): show a 404 page instead of a broken sheet.
+if (bodyError.value) {
+  throw createError({
+    status: bodyError.value.statusCode ?? 500,
+    statusText: bodyError.value.statusText || 'Celestial body not found.',
+    fatal: true
+  })
+}
 // Parallel for time saving
 const [{ data: averages }, { data: moons }] = await Promise.all([
   useFetch('/api/celestial-bodies/averages', {
@@ -29,11 +38,11 @@ const [{ data: averages }, { data: moons }] = await Promise.all([
       type: body.value?.type
     }
   }),
-  useFetch<CelestialBody[]>(`/api/celestial-bodies/${route.params.id}/moons`)
+  useFetch<CelestialBody[]>(`/api/celestial-bodies/${route.params.slug}/moons`)
 ])
 // Both next fetches use the lazy option, so they only run after the page is rendered and the user can see the skeletons and because they lay on external APIs.
 const { data: description, status: descriptionStatus } = useLazyFetch<{ lang: string, extract: string } | null>(
-  `/api/celestial-bodies/${route.params.id}/description`,
+  `/api/celestial-bodies/${route.params.slug}/description`,
   {
     query: { lang: locale },
     watch: [locale]
@@ -47,7 +56,7 @@ const {
   error: imagesError,
   refresh: imagesRefresh
 } = await usePaginationFetch<CelestialBodyImage>(
-  `/api/celestial-bodies/${route.params.id}/images`,
+  `/api/celestial-bodies/${route.params.slug}/images`,
   { lazy: true }
 )
 
@@ -215,7 +224,8 @@ const categories: Record<string, BulletLegendItemInterface> = {
 </script>
 
 <template>
-  <UPage>
+  <!-- No body, no sheet: an unknown slug throws above and lets the error page show. -->
+  <UPage v-if="body">
     <UPageBody>
       <UBreadcrumb :items="items" />
       <div class="flex flex-col md:flex-row gap-4">
@@ -257,6 +267,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
         </div>
       </div>
       <div class="flex flex-col md:flex-row gap-4">
+        <!-- TODO rajouter une caractéristique nombre de lunes (si c'est une planète uniquement) -->
         <UCard
           class="flex-1"
           :title="$t('body_sheet.characteristics')"

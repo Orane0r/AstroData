@@ -9,13 +9,13 @@ const querySchema = z.object({
 })
 
 export default defineCachedEventHandler(async (event) => {
-  const id = Number(getRouterParam(event, 'id'))
+  const slug = getRouterParam(event, 'slug')
   const { lang } = await getValidatedQuery(event, querySchema.parse)
 
   const [body] = await db
     .select({ wikipedia: celestialBodies.wikipedia })
     .from(celestialBodies)
-    .where(eq(celestialBodies.id, id))
+    .where(eq(celestialBodies.slug, slug!))
     .limit(1)
 
   return body?.wikipedia ? fetchWikipediaDescription(body.wikipedia, lang) : null

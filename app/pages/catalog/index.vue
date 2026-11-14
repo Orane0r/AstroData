@@ -159,10 +159,8 @@ const onClickType = (type: CelestialBodyType) => {
   }
 }
 
-// TODO voir si on peut pas mettre l'englishName dans l'url à la place et récupérer d'id autrement (store ?)
 const onClickRow = async (row: TableRow<CelestialBody>) => {
-  const bodyId = bodies.value[Number.parseInt(row.id)]!.id
-  await navigateTo(`/catalog/${bodyId}`)
+  await navigateTo(`/catalog/${row.original.slug}`)
 }
 </script>
 

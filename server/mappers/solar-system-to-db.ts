@@ -1,6 +1,6 @@
 import { BodyType, type SolarSystemBodyData } from '../types/solar-system'
 import type { CelestialBodyType, NewCelestialBody } from '~~/shared/types/db'
-import { removeNumberPrefix } from '~~/shared/utils/string'
+import { removeNumberPrefix, slugify } from '~~/shared/utils/string'
 import { fetchWikipediaImageUrl } from '../services/wikipedia'
 
 const BODY_TYPE_MAP: Record<BodyType, CelestialBodyType> = {
@@ -17,9 +17,10 @@ const BODY_TYPE_MAP: Record<BodyType, CelestialBodyType> = {
  * @param body Base data.
  * @param parentId Id of the parent's body.
  * @param wikiUrl Wikipedia URL.
+ * @param slug Public slug, see {@link buildSlugMap}.
  * @returns Cleaned and mapped data.
  */
-export async function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyData, parentId: number | null, wikiUrl: string | null): Promise<NewCelestialBody> {
+export async function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyData, parentId: number | null, wikiUrl: string | null, slug: string): Promise<NewCelestialBody> {
   const safeNumber = (value: unknown, defaultValue: number = 0): number => {
     const num = Number(value)
     return Number.isNaN(num) ? defaultValue : num
@@ -32,7 +33,8 @@ export async function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyData, par
 
   return {
     parentId: parentId,
-    name: removeNumberPrefix(body.englishName),
+    name: removeNumberPrefix(body.englishName || '') || removeNumberPrefix(body.name || '') || body.id,
+    slug: slug,
     type: BODY_TYPE_MAP[body.bodyType],
     meanRadius: safeNumber(body.meanRadius),
     massValue: body.mass?.massValue ?? null,
@@ -49,4 +51,41 @@ export async function mapSolarSystemBodiesApiToDb(body: SolarSystemBodyData, par
     imageUrl: imageUrl,
     wikipedia: wikiUrl
   }
+}
+
+/**
+ * Builds the public slug of every body, used as the URL identifier.
+ * Uses the slugified English name, falling back to the dataset id when the name
+ * is missing, and appends the body type only when two bodies would collide
+ * ("Metis" the moon → "metis-moon", "(9) Metis" the asteroid → "metis-asteroid").
+ * @param bodies Bodies from the dataset.
+ * @returns Map of dataset id to slug.
+ */
+export function buildSlugMap(bodies: SolarSystemBodyData[]): Map<string, string> {
+  const candidates = bodies.map(body => ({
+    id: body.id,
+    type: slugify(BODY_TYPE_MAP[body.bodyType] ?? body.bodyType),
+    base: slugify(removeNumberPrefix(body.englishName)) || body.id
+  }))
+
+  const occurrences = new Map<string, number>()
+  for (const { base } of candidates) {
+    occurrences.set(base, (occurrences.get(base) ?? 0) + 1)
+  }
+
+  const used = new Set<string>()
+  const slugs = new Map<string, string>()
+
+  for (const { id, type, base } of candidates) {
+    let slug = (occurrences.get(base) ?? 0) > 1 ? `${base}-${type}` : base
+    let suffix = 2
+    while (used.has(slug)) {
+      slug = `${base}-${type}-${suffix}`
+      suffix += 1
+    }
+    used.add(slug)
+    slugs.set(id, slug)
+  }
+
+  return slugs
 }

@@ -15,6 +15,8 @@ export const celestialBodies = sqliteTable('celestial_bodies', {
     (): AnySQLiteColumn => celestialBodies.id
   ),
   name: text().notNull(),
+  // Public identifier used in URLs, so that a re-seed (which resets `id`) does not break links.
+  slug: text().notNull().unique(),
   type: text({
     enum: CELESTIAL_BODY_TYPES
   }).notNull(),

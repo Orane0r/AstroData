@@ -3,17 +3,17 @@ import { db } from 'hub:db'
 import { eq } from 'drizzle-orm'
 
 export default defineEventHandler(async (event): Promise<CelestialBody> => {
-  const id = Number(getRouterParam(event, 'id'))
+  const slug = getRouterParam(event, 'slug')
   const [body] = await db
     .select()
     .from(celestialBodies)
-    .where(eq(celestialBodies.id, id))
+    .where(eq(celestialBodies.slug, slug!))
     .limit(1)
 
   if (!body) {
     throw createError({
       status: 404,
-      statusText: `Celestial body with id ${id} not found.`
+      statusText: `Celestial body with slug ${slug} not found.`
     })
   }
 

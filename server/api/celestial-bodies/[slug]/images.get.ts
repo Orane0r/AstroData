@@ -7,13 +7,13 @@ import { fetchNasaImages } from '~~/server/services/nasa'
 import { mapNasaImagesToCelestialBodyImages } from '~~/server/mappers/nasa-images-to-celestial-body-images'
 
 export default defineCachedEventHandler(async (event): Promise<PaginatedApiResult<CelestialBodyImage>> => {
-  const id = Number(getRouterParam(event, 'id'))
+  const slug = getRouterParam(event, 'slug')
   const { page, pageSize } = await getValidatedQuery(event, PAGINATION_QUERY_SCHEMA.parse)
 
   const [body] = await db
     .select({ name: celestialBodies.name })
     .from(celestialBodies)
-    .where(eq(celestialBodies.id, id))
+    .where(eq(celestialBodies.slug, slug!))
     .limit(1)
 
   if (!body?.name) {
