@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { TableColumn, TableRow } from '@nuxt/ui'
-import { round, sum } from 'lodash'
+import round from 'lodash/round'
+import sum from 'lodash/sum'
 import { refDebounced } from '@vueuse/core'
 
 const UBadge = resolveComponent('UBadge')
