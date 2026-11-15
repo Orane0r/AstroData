@@ -15,7 +15,8 @@ export default defineNuxtConfig({
     '@nuxthub/core',
     '@nuxt/image',
     '@nuxtjs/i18n',
-    'nuxt-charts'
+    'nuxt-charts',
+    '@pinia/nuxt'
   ],
 
   devtools: {

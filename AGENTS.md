@@ -16,7 +16,8 @@ AstroData is a Nuxt 4 astronomy catalog: Nuxt UI frontend, Nitro API, NuxtHub SQ
 
 ## Layout
 
-- `app/` — Nuxt 4 srcDir: pages, components, composables, utils. Components and utils are auto-imported.
+- `app/` — Nuxt 4 srcDir: pages, components, composables, stores, utils. Components, stores and utils are auto-imported (`@pinia/nuxt`).
+- `app/stores/` — Pinia state that must outlive a page (currently `catalog.ts` for the filters). Pages never call a store directly: they go through its facade composable (e.g. `useCatalogFilters`) so the storage can change without touching pages.
 - `server/` — Nitro: `api/`, `db/` (Drizzle schema, seed, migrations), `services/` (NASA + Wikipedia HTTP), `mappers/`, `middleware/`, `tasks/`, `utils/`.
 - `shared/` — used by both sides via `~~/shared/...`; `shared/utils/*` is auto-imported in both app and server.
 - `i18n/locales/{en,fr}.json` — default locale is `fr`; add every new key to both files.
