@@ -10,21 +10,20 @@ const ScientificNotation = resolveComponent('ScientificNotation')
 const { t } = useI18n()
 const BODY_TYPE_CONFIG = useBodyTypeConfig()
 
-const selectedTypes = ref<CelestialBodyType[]>(['Moon', 'Planet'])
+const { selectedTypes, search, page, toggleType } = useCatalogFilters()
 
-const search = ref('')
 const debouncedSearch = refDebounced(search, 300)
 
 const { data: count, pending: countLoading } = await useFetch('/api/celestial-bodies/count')
 const {
   data: bodiesResult,
-  page,
   pageSize,
   pending: bodiesLoading,
   status: bodiesStatus,
   error: bodiesError,
   refresh: bodiesRefresh
 } = await usePaginationFetch<CelestialBody>('/api/celestial-bodies', {
+  page,
   query: {
     types: selectedTypes,
     search: debouncedSearch
@@ -147,18 +146,6 @@ const totalCount = computed(() => {
   return sum(Object.values(count.value))
 })
 
-watch([debouncedSearch, selectedTypes], () => {
-  page.value = 1
-})
-
-const onClickType = (type: CelestialBodyType) => {
-  if (selectedTypes.value.includes(type)) {
-    selectedTypes.value = selectedTypes.value.filter(t => t !== type)
-  } else {
-    selectedTypes.value.push(type)
-  }
-}
-
 const onClickRow = async (row: TableRow<CelestialBody>) => {
   await navigateTo(`/catalog/${row.original.slug}`)
 }
@@ -199,7 +186,6 @@ const onClickRow = async (row: TableRow<CelestialBody>) => {
           />
         </template>
         <template v-else>
-          <!-- TODO conserver le type sélectionné entre 2 navigations de pages -->
           <UBadge
             v-for="type in types"
             :key="type"
@@ -208,7 +194,7 @@ const onClickRow = async (row: TableRow<CelestialBody>) => {
             :color="selectedTypes.includes(type) ? BODY_TYPE_CONFIG[type]!.color : 'neutral'"
             :icon="BODY_TYPE_CONFIG[type]!.icon"
             class="rounded-full cursor-pointer"
-            @click="onClickType(type)"
+            @click="toggleType(type)"
           >
             <template #trailing>
               <span class="text-dimmed pl-2">
