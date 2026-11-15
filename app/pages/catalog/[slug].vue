@@ -7,6 +7,7 @@ import { formatNumber } from '~/utils/format-number'
 import { kelvinToCelsius, scientificToValue } from '~~/shared/utils/conversion'
 import { scaleToMax } from '~~/shared/utils/maths'
 import { useBodyTypeConfig } from '../../utils/body-config.ts'
+import { BODY_TYPES_WITH_MOONS } from '~~/shared/constants/db.js'
 
 type RadarDatum = {
   metric: string
@@ -127,6 +128,15 @@ const characteristics = computed<Characteristic[]>(() => {
   }
 
   return [
+    ...(BODY_TYPES_WITH_MOONS.has(body.value.type)
+      ? [
+          {
+            label: t('attributes.moons'),
+            value: `${moons.value?.length ?? 0}`,
+            icon: 'i-solar-moon-outline'
+          }
+        ]
+      : []),
     {
       label: t('attributes.mean_radius'),
       value: `${formatNumber(body.value.meanRadius)} ${t('units.km')}`,
@@ -255,7 +265,6 @@ const categories: Record<string, BulletLegendItemInterface> = {
           >
             {{ description.extract }}
           </p>
-          <!-- TODO gérer la langue de l'url -->
           <ULink
             v-if="body?.wikipedia"
             :to="body.wikipedia"
@@ -267,7 +276,6 @@ const categories: Record<string, BulletLegendItemInterface> = {
         </div>
       </div>
       <div class="flex flex-col md:flex-row gap-4">
-        <!-- TODO rajouter une caractéristique nombre de lunes (si c'est une planète uniquement) -->
         <UCard
           class="flex-1"
           :title="$t('body_sheet.characteristics')"

@@ -8,3 +8,5 @@ export const CELESTIAL_BODY_TYPE_ORDER: Record<typeof CELESTIAL_BODY_TYPES[numbe
   'Dwarf planet': 5,
   'Star': 6
 }
+
+export const BODY_TYPES_WITH_MOONS: Set<CelestialBodyType> = new Set(['Planet', 'Dwarf planet'])

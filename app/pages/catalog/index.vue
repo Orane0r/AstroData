@@ -199,6 +199,7 @@ const onClickRow = async (row: TableRow<CelestialBody>) => {
           />
         </template>
         <template v-else>
+          <!-- TODO conserver le type sélectionné entre 2 navigations de pages -->
           <UBadge
             v-for="type in types"
             :key="type"
