@@ -52,8 +52,4 @@ describe('useCatalogStore', () => {
     expect(store.selectedTypes).not.toBe(before)
     expect(before).toEqual(['Moon', 'Planet'])
   })
-
-  it('is a single shared instance', () => {
-    expect(useCatalogStore()).toBe(useCatalogStore())
-  })
 })

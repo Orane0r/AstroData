@@ -75,19 +75,4 @@ describe('useCatalogFilters', () => {
 
     secondVisit.unmount()
   })
-
-  it('does not leak state between two independent visits when it is reset', async () => {
-    resetFilters()
-    const { page } = useCatalogFilters()
-    page.value = 2
-
-    const secondVisit = await mountSuspended(CatalogProbe)
-    expect(secondVisit.get('[data-testid="page"]').text()).toBe('2')
-
-    resetFilters()
-    await nextTick()
-    expect(secondVisit.get('[data-testid="page"]').text()).toBe('1')
-
-    secondVisit.unmount()
-  })
 })

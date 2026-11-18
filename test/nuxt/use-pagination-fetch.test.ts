@@ -8,6 +8,7 @@ type FetchOptions = {
   query: {
     page: Ref<number>
     pageSize: Ref<number>
+    [key: string]: unknown
   }
   watch: unknown
 }
@@ -55,6 +56,22 @@ describe('usePaginationFetch', () => {
 
     expect(pageSize.value).toBe(5)
     expect(lastFetchOptions().query.pageSize).toBe(pageSize)
+  })
+
+  it('forwards the caller query alongside page and pageSize', async () => {
+    const search = ref('mars')
+    const types = ref(['Moon'])
+
+    await usePaginationFetch('/api/celestial-bodies', {
+      query: { search, types }
+    })
+
+    const { query } = lastFetchOptions()
+
+    expect(query.search).toBe(search)
+    expect(query.types).toBe(types)
+    expect((query.page as Ref<number>).value).toBe(1)
+    expect((query.pageSize as Ref<number>).value).toBe(DEFAULT_PAGE_SIZE)
   })
 
   it('watches page, pageSize and the given sources', async () => {
