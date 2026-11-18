@@ -1,10 +1,5 @@
 {
-  "cSpell.words": [
-    "chrts",
-    "decouvreur",
-    "semimajor",
-    "vcharts"
-  ],
+  "cSpell.words": ["chrts", "decouvreur", "semimajor", "vcharts"],
   "chat.tools.terminal.autoApprove": {
     "pnpm": true
   },

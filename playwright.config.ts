@@ -1,13 +1,14 @@
-import { fileURLToPath } from 'node:url'
 import { defineConfig, devices } from '@playwright/test'
+
 import type { ConfigOptions } from '@nuxt/test-utils/playwright'
+import { fileURLToPath } from 'node:url'
 
 export default defineConfig<ConfigOptions>({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: 'html',
   use: {
     trace: 'on-first-retry',
