@@ -239,10 +239,12 @@ const categories: Record<string, BulletLegendItemInterface> = {
     <UPageBody>
       <UBreadcrumb :items="items" />
       <div class="flex flex-col md:flex-row gap-4">
-        <div class="flex-1 min-h-50">
+        <div
+          v-if="body?.imageUrl"
+          class="flex-1 min-h-50"
+        >
           <!-- TODO bouton 3d + vue 3d -->
           <NuxtImg
-            v-if="body?.imageUrl"
             :src="body.imageUrl"
             :alt="body.name"
             fit="contain"
