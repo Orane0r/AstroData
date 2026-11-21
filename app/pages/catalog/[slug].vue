@@ -424,8 +424,6 @@ const categories: Record<string, BulletLegendItemInterface> = {
           </div>
         </template>
       </UModal>
-      <div>missions liées</div>
-      <div>objets liés (à voir)</div>
     </UPageBody>
   </UPage>
 </template>
