@@ -383,7 +383,7 @@ const categories: Record<string, BulletLegendItemInterface> = {
 
         <template #footer>
           <UPagination
-            v-if="imagesStatus === 'success' && (images?.data?.length ?? 0) > pageSize"
+            v-if="imagesStatus === 'success' && (images?.data?.length ?? 0) > 0"
             v-model:page="page"
             :total="images?.total"
             :items-per-page="pageSize"
